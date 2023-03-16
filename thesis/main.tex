@@ -1,0 +1,174 @@
+\documentclass[a4paper,12pt,oneside,openright]{report}
+% \documentclass[a4paper,12pt,twoside,openright]{report}
+
+\usepackage{cmap}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+
+\usepackage[a4paper,
+            bindingoffset=0.5cm,
+            top=2.5cm,
+            bottom=2.5cm,
+            left=2.5cm,
+            right=2.5cm,
+            marginparwidth=2.0cm]{geometry}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{array}
+\usepackage{caption}
+\usepackage{changepage}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage[bookmarks,pdfusetitle,unicode]{hyperref}
+\usepackage[none]{hyphenat}  % turn off hyphenation (words splitting)
+\usepackage{indentfirst}
+\usepackage{lipsum}
+\usepackage{minted}
+\usepackage[all,defaultlines=3]{nowidow}  % prevent single lines between pages
+\usepackage{physics}
+\usepackage{setspace}
+\usepackage{showlabels}  % TODO comment/remove at the end
+\usepackage{siunitx}
+\usepackage{tikz}
+\usepackage[colorinlistoftodos,textsize=tiny]{todonotes}
+
+% dots in the table of contents
+\usepackage{tocloft}
+\renewcommand{\cftchapdotsep}{\cftdotsep}
+
+% headers customization
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}  % clear all current header and footer fields
+
+\renewcommand{\headrulewidth}{1.0pt}
+\renewcommand{\chaptermark}[1]{\markboth{\MakeUppercase{\thechapter.~#1}}{}}
+\fancyhead[LE,RO]{\bfseries\thepage}  % page number: left on even, right on odd
+\fancyhead[RE]{\bfseries\nouppercase{\leftmark}\chaptermark}  % right on even
+\fancyhead[LO]{\bfseries\nouppercase{\rightmark}\sectionmark}  % left on odd
+
+\fancypagestyle{plain}{  % e.g. clear pages and where chapters begin
+    \fancyhf{}
+    \fancyhead[RO]{\bfseries\thepage}
+    % \renewcommand{\headrulewidth}{0pt}
+}
+
+% footnotes customization
+\setlength{\footnotesep}{10pt}
+
+\renewcommand{\footnoterule}{
+    \kern 12pt
+    \hrule width \textwidth height 0.4pt
+    \kern 5pt
+}
+
+\interfootnotelinepenalty=10000  % do not split between pages
+
+% do not reset footnote counter between chapters
+\usepackage{chngcntr}
+\counterwithout{footnote}{chapter}
+
+% captions customization
+\captionsetup{justification=centering}
+
+% dotted borders around links in PDF viewers
+\hypersetup{pdfborderstyle=/S/D/D[3 2]/W 0.25,pdfborder=0 0 1}
+
+% no borders around links in PDF viewers
+% \hypersetup{colorlinks,allcolors=black}
+
+% miscellaneous and additional text formatting
+\setstretch{1.25}
+\setlength{\parskip}{0.75em}
+\setlength{\headheight}{15pt}
+\addtolength{\topmargin}{-3pt}
+
+
+%
+% Metadata
+%
+\title{Example title}
+\author{Name Surname}
+\date{2023}
+
+% \def\TheUniversity{Politechnika Wrocławska}
+\def\TheUniversity{Wrocław University of Science and Technology}
+% \def\TheFaculty{Wydział Informatyki i Telekomunikacji}
+\def\TheFaculty{Faculty of Information and Communication Technology}
+% \def\TheHeader{Rozprawka Doktorska}
+\def\TheHeader{Doctoral Thesis}
+
+\def\TheTitleEN{Title.}
+\def\TheTitlePL{Tytuł.}
+
+\def\TheAuthorLabel{Author}
+% \def\TheAuthorTitle{mgr inż.}
+\def\TheAuthorTitle{MSc Eng}
+\def\TheAuthorName{Name Surname}
+
+\def\TheSupervisorLabel{Supervisor}
+% \def\TheSupervisorTitle{dr hab. inż.}
+\def\TheSupervisorTitle{Prof PhD Eng}
+\def\TheSupervisorName{Name Surname}
+
+\def\TheDate{City, Year}
+
+\def\TheSentenceText{Inspiring quote.}
+\def\TheSentenceAuthor{Author}
+
+
+%
+% Content
+%
+\begin{document}
+    {
+        \pagestyle{empty}
+
+        \include{00a-title}
+        \cleardoublepage
+
+        \include{00b-sentence}
+        \cleardoublepage
+    }
+
+
+    \pagenumbering{roman}
+    \setcounter{page}{1}
+
+    \include{00c-abstract}
+    \cleardoublepage
+
+    \include{00d-streszczenie}
+    \cleardoublepage
+
+    \include{00e-acknowledgments}
+    \cleardoublepage
+
+
+    \pagenumbering{arabic}
+    \setcounter{page}{1}
+
+    \include{00f-contents}
+    \cleardoublepage
+
+    \include{01-chapter}
+    \cleardoublepage
+
+
+    \appendix
+
+    \include{81-appendix}
+    \cleardoublepage
+
+    \include{98-figures}
+    \cleardoublepage
+
+    \include{99-bibliography}
+    \cleardoublepage
+\end{document}

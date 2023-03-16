@@ -1,0 +1,12 @@
+/[a-zA-Z0-9_-]*.aux
+/[a-zA-Z0-9_-]*.bbl
+/[a-zA-Z0-9_-]*.blg
+/[a-zA-Z0-9_-]*.lof
+/[a-zA-Z0-9_-]*.log
+/[a-zA-Z0-9_-]*.nav
+/[a-zA-Z0-9_-]*.out
+/[a-zA-Z0-9_-]*.pdf
+/[a-zA-Z0-9_-]*.snm
+/[a-zA-Z0-9_-]*.toc
+/[a-zA-Z0-9_-]*.vrb
+/_minted-[a-zA-Z0-9_-]*/
