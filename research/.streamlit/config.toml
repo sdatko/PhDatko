@@ -1,0 +1,10 @@
+[server]
+baseUrlPath = ""
+enableCORS = false
+enableXsrfProtection = false
+headless = true
+port = 18555
+runOnSave = true
+
+[browser]
+gatherUsageStats = false

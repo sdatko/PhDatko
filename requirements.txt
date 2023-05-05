@@ -1,0 +1,6 @@
+flake8
+matplotlib
+pandas
+seaborn
+streamlit
+git+https://github.com/sdatko/PyOpenSet.git@master
