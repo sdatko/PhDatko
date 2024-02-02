@@ -13,6 +13,7 @@ from openset.experiments.correlations import Correlations
 from openset.experiments.distributions import Generated
 from openset.experiments.overlapping import BoundingBoxes
 from openset.experiments.properties import MVNEstimation
+from openset.experiments.variances import Variances
 
 
 #
@@ -248,6 +249,50 @@ def correlations():
 
 
 #
+# Variances experiment
+#
+def variances():
+    Variances.setup_db()
+
+    with orm.db_session():
+        print(asctime(), 'Selecting...')
+        rows = Variances.Cache.select()
+        entries = []
+
+        print(asctime(), 'Generating DataFrame...')
+        #
+        # NOTE(sdatko): By default the array data in Pony ORM are kept under
+        #               the pony.orm.ormtypes.TrackedArray type, so we need
+        #               to convert all such values individually in a loop
+        #               instead of just using pd.DataFrame(row.to_dict()...)
+        #
+        # df = pd.DataFrame(row.to_dict() for row in rows)  # see note
+        for row in rows:
+            entry = row.to_dict()
+
+            entry['train'] = np.array(entry['train'].get_untracked())
+            entry['known'] = np.array(entry['known'].get_untracked())
+            entry['unknown'] = np.array(entry['unknown'].get_untracked())
+
+            entries.append(entry)
+
+        df = pd.DataFrame(entries)
+
+    print(asctime(), 'Processing additional columns...')
+    classification(df, 90)
+    classification(df, 95)
+    classification(df, 99)
+    quartiles(df)
+    separability(df)
+
+    print(asctime(), 'Saving...')
+    with open('variances.pickle', 'wb') as file:
+        pickle.dump(df, file, protocol=pickle.HIGHEST_PROTOCOL)
+
+    print(asctime(), 'Done')
+
+
+#
 # Bounding boxes overlapping experiment
 #
 def overlapping():
@@ -293,5 +338,6 @@ def properties():
 if __name__ == '__main__':
     distributions()
     correlations()
+    variances()
     overlapping()
     properties()
