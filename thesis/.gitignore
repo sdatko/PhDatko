@@ -10,3 +10,14 @@
 /[a-zA-Z0-9_-]*.toc
 /[a-zA-Z0-9_-]*.vrb
 /_minted-[a-zA-Z0-9_-]*/
+/chapters/[a-zA-Z0-9_-]*.aux
+/chapters/[a-zA-Z0-9_-]*.bbl
+/chapters/[a-zA-Z0-9_-]*.blg
+/chapters/[a-zA-Z0-9_-]*.lof
+/chapters/[a-zA-Z0-9_-]*.log
+/chapters/[a-zA-Z0-9_-]*.nav
+/chapters/[a-zA-Z0-9_-]*.out
+/chapters/[a-zA-Z0-9_-]*.pdf
+/chapters/[a-zA-Z0-9_-]*.snm
+/chapters/[a-zA-Z0-9_-]*.toc
+/chapters/[a-zA-Z0-9_-]*.vrb
