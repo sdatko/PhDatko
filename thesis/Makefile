@@ -1,4 +1,8 @@
-all: main.pdf
+.PHONY: all clean purge thesis
+
+all: thesis
+
+thesis: main.pdf
 
 main.pdf: *.bib *.tex chapters/* images/*
 	pdflatex --shell-escape main.tex -o main.pdf
