@@ -89,6 +89,9 @@
 % no borders around links in PDF viewers
 % \hypersetup{colorlinks,allcolors=black}
 
+% restore the \qty command from siunitx package
+\AtBeginDocument{\RenewCommandCopy\qty\SI}
+
 % miscellaneous and additional text formatting
 \setstretch{1.25}
 \setlength{\parskip}{0.75em}
