@@ -27,7 +27,8 @@
 \usepackage{float}
 \usepackage{graphicx}
 \usepackage[bookmarks,pdfusetitle,unicode]{hyperref}
-\usepackage[none]{hyphenat}  % turn off hyphenation (words splitting)
+% \usepackage[none]{hyphenat}  % turn off hyphenation (words splitting)
+\usepackage{hyphenat}
 \usepackage{indentfirst}
 \usepackage{lipsum}
 \usepackage{longtable}
@@ -38,6 +39,10 @@
 \usepackage{siunitx}
 \usepackage{tikz}
 \usepackage[colorinlistoftodos,textsize=tiny]{todonotes}
+
+% reduce the hyphenation to only where it is *really* necessary
+% but do not remove it completely – to avoid the Overfull \hbox
+\hyphenpenalty=1000
 
 % dots in the table of contents
 \usepackage{tocloft}
