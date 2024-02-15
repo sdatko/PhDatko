@@ -1,5 +1,67 @@
 \chapter{Source code}
 \label{chapter:source-code}
 
-\todo{Do zrobienia}  % TODO
-\lipsum[1]
+The complete source code related to the conducted scientific research and the final preparation of the following dissertation is publicly available in the GitHub repositories:
+\begin{itemize}
+    \item \url{https://github.com/sdatko/PhDatko}
+    \item \url{https://github.com/sdatko/PyOpenSet}
+\end{itemize}
+
+
+\section{PhDatko}
+\label{section:phdatko}
+
+This repository contains source files of the tooling used during the research and work on the final dissertation, including the \LaTeX{} source files of this document, so all the conducted experiments can be repeated in case of any follow-up research is needed. It~is divided into two major parts.
+
+The \texttt{thesis/} directory contains the source files involved in building the current document. There is the \texttt{Makefile} file provided, so the dissertation can be compiled, provided that the \LaTeX{} compiler available in system, using the following command:
+\vspace{-\parskip}
+\begin{minted}{shell}
+make thesis
+\end{minted}
+
+Inside the \texttt{research/} directory the source files of developed application are located. The application, written in the Python programming language, utilizes the Streamlit library to provide interactive viewer interface in web browser for analysing the results of all conducted experiments. The results are calculated on demand if no cache is available. It is possible to use the provided \texttt{tox} environment to conveniently create the Python virtual environment with all required dependencies and run the developed application:
+\vspace{-\parskip}
+\begin{minted}{shell}
+tox -e streamlit
+\end{minted}
+
+
+\section{PyOpenSet}
+\label{section:pyopenset}
+
+This repository contains the developed helper library for performing outlier detection / implementing open-set classification in high-dimensional data. It was written in Python programming language and consists of data generators, implemented outlieness measures and additional utilities, such as local runner for automated multiprocessing and general-purpose mechanism for persistent caching of function calls in SQLite database.
+
+The library can be installed in local system using the following command:
+\vspace{-\parskip}
+\begin{minted}{shell}
+pip install git+https://github.com/sdatko/PyOpenSet.git@master
+\end{minted}
+
+Listing \ref{listing:pyopenset-example} illustrates how PyOpenSet library can be utilized in a Python script to generate a data cluster containing $60$ samples of dimension $30$, each with $75\%$ of features centered around the location $4.0$ (mean) with a spread of $1.0$ (standard deviation), having $50\%$ of features correlated with a strength of $0.25$ (covariance).
+
+The \texttt{\textbf{examples/}} directory in the code repository provides additional usage examples for one's reference.
+
+\begin{listing}[t]
+    \begin{minted}[numbersep=0.5em,fontsize=\small,linenos]{Python}
+#!/usr/bin/env python3
+
+from openset.data.generator import ClusterGenerator
+
+
+def main():
+    generator = ClusterGenerator()
+    generator.reset(42)
+
+    data = generator.mvn(samples=60, dimension=30,
+                         location=4.0, scale=1.0,
+                         n_features=0.75, n_correlated=0.5, covariance=0.25)
+
+    print(data)
+
+
+if __name__ == '__main__':
+    main()
+    \end{minted}
+    \caption{Example usage of PyOpenSet library to generate data cluster}
+    \label{listing:pyopenset-example}
+\end{listing}
