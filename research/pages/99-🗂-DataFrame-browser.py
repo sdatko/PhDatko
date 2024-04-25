@@ -4,7 +4,7 @@ import os.path
 
 import streamlit as st
 
-from viewer_utils import load_dataframe
+from viewer_extras.utils import load_dataframe
 
 
 #
