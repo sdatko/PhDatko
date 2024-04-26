@@ -1,6 +1,7 @@
-flake8
 matplotlib
+numpy
 pandas
-seaborn
+scikit-learn
+scipy
 streamlit
 git+https://github.com/sdatko/PyOpenSet.git@master
