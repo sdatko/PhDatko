@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from datetime import datetime
 import pickle
 import re
 
@@ -30,3 +31,13 @@ def load_dataframe(path='data/distributions.pickle'):
     with open(path, 'rb') as file:
         df = pickle.load(file)
     return df
+
+
+#
+# Returns current date and time with milliseconds
+#
+# E.g. 2023-03-14-21-37-54-789456
+#
+# def strfnow(fmt='%Y-%m-%d-%H-%M-%S-%f'):
+def now(fmt='%Y-%m-%d-%H-%M-%S-%f'):
+    return datetime.now().strftime(fmt)
