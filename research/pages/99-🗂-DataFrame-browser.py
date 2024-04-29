@@ -4,13 +4,14 @@ import os.path
 
 import streamlit as st
 
+from viewer_extras.parameters import st_page_options
 from viewer_extras.utils import load_dataframe
 
 
 #
 # Header and settings
 #
-st.set_page_config(layout='wide')
+st.set_page_config(**st_page_options)
 st.title('DataFrame browser')
 
 

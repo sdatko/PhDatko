@@ -9,6 +9,7 @@ import streamlit as st
 
 from viewer_extras.parameters import legend_locations
 from viewer_extras.parameters import plot_options
+from viewer_extras.parameters import st_page_options
 from viewer_extras.utils import natural_sort
 from viewer_extras.utils import load_dataframe
 
@@ -16,7 +17,7 @@ from viewer_extras.utils import load_dataframe
 #
 # Header and settings
 #
-st.set_page_config(layout='wide')
+st.set_page_config(**st_page_options)
 st.title('Trends')
 
 st.write('Determine the characteristics and stability of parameters'

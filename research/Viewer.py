@@ -2,11 +2,9 @@
 
 import streamlit as st
 
-st.set_page_config(
-    initial_sidebar_state='expanded',
-    layout='wide',
-)
+from viewer_extras.parameters import st_page_options
 
+st.set_page_config(**st_page_options)
 st.title('Hello World!')
 
 st.info('Select a tool from the sidebar menu on the left.')

@@ -14,12 +14,13 @@ from viewer_extras.measures import lof_distance
 from viewer_extras.measures import mahalanobis_distance
 from viewer_extras.measures import seuclidean_distance
 from viewer_extras.parameters import plot_options
+from viewer_extras.parameters import st_page_options
 
 
 #
 # Header and settings
 #
-st.set_page_config(layout='wide')
+st.set_page_config(**st_page_options)
 st.title('Measures illustrated')
 
 st.write('The figures below are involved in the Chapter 2 of Dissertation.')
