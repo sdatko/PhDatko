@@ -1,8 +1,22 @@
 #!/usr/bin/env python3
 
 import pickle
+import re
 
 import streamlit as st
+
+
+#
+# Natural sort for a list of strings
+#
+# Code adapted from: https://stackoverflow.com/a/4836734
+#
+def natural_sort(values):
+    def alphanum_key(value):
+        return [int(part) if part.isdigit() else part.lower()
+                for part in re.split('([0-9]+)', str(value))]
+
+    return sorted(values, key=alphanum_key)
 
 
 #
