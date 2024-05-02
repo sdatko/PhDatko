@@ -34,6 +34,7 @@ file = st.radio(
     options=[
         'correlations.pickle',
         'distributions.pickle',
+        'variances.pickle',
     ],
     index=1,
     horizontal=True,
@@ -130,6 +131,50 @@ with st.container(border=True):
             filters[key] = st.selectbox(
                 label=key.title(),
                 options=df[key].drop_duplicates().sort_values(),
+            )
+
+        with cols[4]:
+            key = 'model'
+            filters[key] = st.selectbox(
+                label=key.title(),
+                options=df[key].drop_duplicates().sort_values(),
+            )
+
+        with cols[5]:
+            key = 'seed'
+            filters[key] = st.select_slider(
+                label=key.title(),
+                options=df[key].drop_duplicates().sort_values(),
+            )
+
+    if file == 'variances.pickle':
+        with cols[0]:
+            key = 'n_varied'
+            filters[key] = st.select_slider(
+                label=key.title(),
+                options=df[key].drop_duplicates().sort_values(),
+            )
+
+        with cols[1]:
+            key = 'variance'
+            filters[key] = st.select_slider(
+                label=key.title(),
+                options=df[key].drop_duplicates().sort_values(),
+            )
+
+        with cols[2]:
+            key = 'distance'
+            filters[key] = st.select_slider(
+                label=key.title(),
+                options=df[key].drop_duplicates().sort_values(),
+            )
+
+        with cols[3]:
+            st.markdown('# ')  # Spacing hack
+            key = 'outliers_varied'
+            filters[key] = st.checkbox(
+                label=key.title(),
+                value=False,
             )
 
         with cols[4]:

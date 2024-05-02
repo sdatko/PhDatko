@@ -13,6 +13,8 @@ FILES_TO_GET = (
     'overlapping.sqlite',
     'properties.pickle',
     'properties.sqlite',
+    'variances.pickle',
+    'variances.sqlite',
 )
 
 print('Fetching files:')

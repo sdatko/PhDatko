@@ -34,6 +34,7 @@ file = st.radio(
         'distributions.pickle',
         'overlapping.pickle',
         'properties.pickle',
+        'variances.pickle',
     ],
     index=1,
     horizontal=True,
@@ -112,6 +113,18 @@ with st.container(border=True):
         ]
         inputs = list(df.columns)[:5]
         outputs = list(df.columns)[5:]
+
+    if file == 'variances.pickle':
+        x_inputs = [
+            'variance',  # 4
+            'distance',  # 0
+            'n_varied',  # 3
+            # 'model',  # 1
+            # 'seed',  # 2
+            # 'outliers_varied',  # 5
+        ]
+        inputs = list(df.columns)[:6]
+        outputs = list(df.columns)[9:]
 
     #
     # First row
@@ -331,6 +344,55 @@ with st.container(border=True):
 
         with third_row[4]:
             pass
+
+        with third_row[5]:
+            key = 'seed'
+            filters[key] = st.select_slider(
+                label=key.title(),
+                options=df[key].drop_duplicates().sort_values(),
+                disabled=(aggregate_seeds or multi_plots and parameter == key),
+            )
+
+    if file == 'variances.pickle':
+        with third_row[0]:
+            key = 'n_varied'
+            filters[key] = st.select_slider(
+                label=key.title(),
+                options=df[key].drop_duplicates().sort_values(),
+                disabled=(x_axis == key or multi_plots and parameter == key),
+            )
+
+        with third_row[1]:
+            key = 'variance'
+            filters[key] = st.select_slider(
+                label=key.title(),
+                options=df[key].drop_duplicates().sort_values(),
+                disabled=(x_axis == key or multi_plots and parameter == key),
+            )
+
+        with third_row[2]:
+            key = 'distance'
+            filters[key] = st.select_slider(
+                label=key.title(),
+                options=df[key].drop_duplicates().sort_values(),
+                disabled=(x_axis == key or multi_plots and parameter == key),
+            )
+
+        with third_row[3]:
+            st.markdown('# ')  # Spacing hack
+            key = 'outliers_varied'
+            filters[key] = st.checkbox(
+                label=key.title(),
+                value=False,
+            )
+
+        with third_row[4]:
+            key = 'model'
+            filters[key] = st.selectbox(
+                label=key.title(),
+                options=df[key].drop_duplicates().sort_values(),
+                disabled=(multi_plots and parameter == key),
+            )
 
         with third_row[5]:
             key = 'seed'
