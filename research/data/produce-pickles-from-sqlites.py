@@ -160,6 +160,19 @@ def separability(df: pd.DataFrame) -> None:
                    for row in df.itertuples(index=False)]
 
 
+def intersection_over_union(df: pd.DataFrame) -> None:
+    '''Calculates the Jaccard index of bounding boxes.
+
+    It is defined as the ratio between the overlapping area/volume
+    and the union of the areas/volumes.
+    J(A, B) = |A∩B| / |A∪B| = |A∩B| / (|A| + |B| - |A∩B|)
+    '''
+    volume1 = 100 * df['volume'] / df['factor1']
+    volume2 = 100 * df['volume'] / df['factor2']
+
+    df['IoU'] = df['volume'] / (volume1 + volume2 - df['volume'])
+
+
 #
 # Distributions of measures experiment
 #
@@ -310,6 +323,7 @@ def overlapping():
 
     print(asctime(), 'Processing additional columns...')
     df = df.drop('id', axis=1)  # Omit the rows IDs (SQL primary key)
+    intersection_over_union(df)
 
     print(asctime(), 'Saving...')
     with open('overlapping.pickle', 'wb') as file:
