@@ -70,48 +70,48 @@ with st.container(border=True):
 
     if file == 'correlations.pickle':
         x_inputs = [
-            'n_correlated',  # 4
-            'covariance',  # 5
-            'distance',  # 1
-            # 'model',  # 2
-            # 'seed',  # 3
-            # 'outliers_correlated',  # 6
+            'n_correlated',  # 3
+            'covariance',  # 4
+            'distance',  # 0
+            # 'model',  # 1
+            # 'seed',  # 2
+            # 'outliers_correlated',  # 5
         ]
-        inputs = list(df.columns)[1:7]
-        outputs = list(df.columns)[10:]
+        inputs = list(df.columns)[:6]
+        outputs = list(df.columns)[9:]
 
     if file == 'distributions.pickle':
         x_inputs = [
-            'dimension',  # 1
-            'samples',  # 5
-            'distance',  # 2
-            # 'distribution',  # 3
-            # 'model',  # 4
-            # 'seed',  # 6
+            'dimension',  # 0
+            'samples',  # 4
+            'distance',  # 1
+            # 'distribution',  # 2
+            # 'model',  # 3
+            # 'seed',  # 5
         ]
-        inputs = list(df.columns)[1:7]
-        outputs = list(df.columns)[10:]
+        inputs = list(df.columns)[:6]
+        outputs = list(df.columns)[9:]
 
     if file == 'overlapping.pickle':
         x_inputs = [
-            'dimension',  # 1
-            'samples',  # 3
-            # 'distribution',  # 2
-            # 'seed',  # 4
+            'dimension',  # 0
+            'samples',  # 2
+            # 'distribution',  # 1
+            # 'seed',  # 3
         ]
-        inputs = list(df.columns)[1:5]
-        outputs = list(df.columns)[-4:]
+        inputs = list(df.columns)[:4]
+        outputs = list(df.columns)[4:]
 
     if file == 'properties.pickle':
         x_inputs = [
-            'dimension',  # 1
-            'samples',  # 2
-            'n_correlated',  # 3
-            'covariance',  # 4
-            # 'seed',  # 5
+            'dimension',  # 0
+            'samples',  # 1
+            'n_correlated',  # 2
+            'covariance',  # 3
+            # 'seed',  # 4
         ]
-        inputs = list(df.columns)[1:6]
-        outputs = list(df.columns)[-5:]
+        inputs = list(df.columns)[:5]
+        outputs = list(df.columns)[5:]
 
     #
     # First row

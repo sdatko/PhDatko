@@ -38,7 +38,7 @@ except Exception as err:
     st.error(f'{type(err).__name__}: {err}')
     st.stop()
 
-df_columns = list(df.columns)[1:]  # we omit the rows IDs
+df_columns = list(df.columns)
 df_rows = len(df)
 
 

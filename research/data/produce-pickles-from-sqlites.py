@@ -191,6 +191,7 @@ def distributions():
         df = pd.DataFrame(entries)
 
     print(asctime(), 'Processing additional columns...')
+    df = df.drop('id', axis=1)  # Omit the rows IDs (SQL primary key)
     classification(df, 90)
     classification(df, 95)
     classification(df, 99)
@@ -235,6 +236,7 @@ def correlations():
         df = pd.DataFrame(entries)
 
     print(asctime(), 'Processing additional columns...')
+    df = df.drop('id', axis=1)  # Omit the rows IDs (SQL primary key)
     classification(df, 90)
     classification(df, 95)
     classification(df, 99)
@@ -279,6 +281,7 @@ def variances():
         df = pd.DataFrame(entries)
 
     print(asctime(), 'Processing additional columns...')
+    df = df.drop('id', axis=1)  # Omit the rows IDs (SQL primary key)
     classification(df, 90)
     classification(df, 95)
     classification(df, 99)
@@ -305,6 +308,9 @@ def overlapping():
         print(asctime(), 'Generating DataFrame...')
         df = pd.DataFrame(row.to_dict() for row in rows)
 
+    print(asctime(), 'Processing additional columns...')
+    df = df.drop('id', axis=1)  # Omit the rows IDs (SQL primary key)
+
     print(asctime(), 'Saving...')
     with open('overlapping.pickle', 'wb') as file:
         pickle.dump(df, file, protocol=pickle.HIGHEST_PROTOCOL)
@@ -324,6 +330,9 @@ def properties():
 
         print(asctime(), 'Generating DataFrame...')
         df = pd.DataFrame(row.to_dict() for row in rows)
+
+    print(asctime(), 'Processing additional columns...')
+    df = df.drop('id', axis=1)  # Omit the rows IDs (SQL primary key)
 
     print(asctime(), 'Saving...')
     with open('properties.pickle', 'wb') as file:
