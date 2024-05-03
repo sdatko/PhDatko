@@ -9,6 +9,7 @@ from pony import orm
 from sklearn.metrics import auc
 from sklearn.metrics import roc_curve
 
+from openset.experiments.base import BaseExperiment
 from openset.experiments.correlations import Correlations
 from openset.experiments.distributions import Generated
 from openset.experiments.overlapping import BoundingBoxes
@@ -173,194 +174,87 @@ def intersection_over_union(df: pd.DataFrame) -> None:
     df['IoU'] = df['volume'] / (volume1 + volume2 - df['volume'])
 
 
-#
-# Distributions of measures experiment
-#
-def distributions():
-    Generated.setup_db()
+def replace_values(df: pd.DataFrame, column: str) -> None:
+    values = {
+        # models
+        'AngleBasedOutlierFactor': 'ABOF',
+        'Euclidean': 'ED',
+        'IntegratedRankWeightedDepth(100)': 'IRWD-100',
+        'IntegratedRankWeightedDepth(500)': 'IRWD-500',
+        'IntegratedRankWeightedDepth(1000)': 'IRWD-1000',
+        'KNearestNeighbors(5)': 'kNN-5',
+        'KNearestNeighbors(10)': 'kNN-10',
+        'KNearestNeighbors(20)': 'kNN-20',
+        'LocalOutlierFactor(5)': 'LOF-5',
+        'LocalOutlierFactor(10)': 'LOF-10',
+        'LocalOutlierFactor(20)': 'LOF-20',
+        'Mahalanobis': 'MD',
+        'Manhattan': 'L1',
+        'MinMaxOutFactor': 'MMOF',
+        'MinMaxOutScore': 'MMOS',
+        'SEuclidean': 'SED',
+    }
+
+    for to_replace, replacement in values.items():
+        df.replace({column: to_replace}, replacement, inplace=True)
+
+
+def process(source: BaseExperiment, output: str, tracked: bool = False,
+            replace: bool = False, IoU: bool = False) -> None:
+    print(asctime(), source.__name__, '->', output)
+    source.setup_db()
 
     with orm.db_session():
-        print(asctime(), 'Selecting...')
-        rows = Generated.Cache.select()
-        entries = []
+        rows = source.Cache.select()
 
-        print(asctime(), 'Generating DataFrame...')
-        #
-        # NOTE(sdatko): By default the array data in Pony ORM are kept under
-        #               the pony.orm.ormtypes.TrackedArray type, so we need
-        #               to convert all such values individually in a loop
-        #               instead of just using pd.DataFrame(row.to_dict()...)
-        #
-        # df = pd.DataFrame(row.to_dict() for row in rows)  # see note
-        for row in rows:
-            entry = row.to_dict()
+        if tracked:
+            entries = []
 
-            entry['train'] = np.array(entry['train'].get_untracked())
-            entry['known'] = np.array(entry['known'].get_untracked())
-            entry['unknown'] = np.array(entry['unknown'].get_untracked())
+            for row in rows:
+                entry = row.to_dict()
 
-            entries.append(entry)
+                #
+                # NOTE: By default the array data in Pony ORM are kept under
+                #       the pony.orm.ormtypes.TrackedArray type, so we need
+                #       to convert all such values individually in a loop
+                #       instead of just using pd.DataFrame(row.to_dict()...)
+                #
+                entry['train'] = np.array(entry['train'].get_untracked())
+                entry['known'] = np.array(entry['known'].get_untracked())
+                entry['unknown'] = np.array(entry['unknown'].get_untracked())
 
-        df = pd.DataFrame(entries)
+                entries.append(entry)
 
-    print(asctime(), 'Processing additional columns...')
-    df = df.drop('id', axis=1)  # Omit the rows IDs (SQL primary key)
-    classification(df, 90)
-    classification(df, 95)
-    classification(df, 99)
-    quartiles(df)
-    separability(df)
+            df = pd.DataFrame(entries)
 
-    print(asctime(), 'Saving...')
-    with open('distributions.pickle', 'wb') as file:
+        else:
+            df = pd.DataFrame(row.to_dict() for row in rows)
+
+    df.drop('id', axis=1, inplace=True)  # Omit the rows IDs (SQL primary key)
+
+    if replace:
+        replace_values(df, 'model')
+
+    if tracked:
+        classification(df, 90)
+        classification(df, 95)
+        classification(df, 99)
+        quartiles(df)
+        separability(df)
+
+    if IoU:
+        intersection_over_union(df)
+
+    with open(output, 'wb') as file:
         pickle.dump(df, file, protocol=pickle.HIGHEST_PROTOCOL)
-
-    print(asctime(), 'Done')
-
-
-#
-# Correlations experiment
-#
-def correlations():
-    Correlations.setup_db()
-
-    with orm.db_session():
-        print(asctime(), 'Selecting...')
-        rows = Correlations.Cache.select()
-        entries = []
-
-        print(asctime(), 'Generating DataFrame...')
-        #
-        # NOTE(sdatko): By default the array data in Pony ORM are kept under
-        #               the pony.orm.ormtypes.TrackedArray type, so we need
-        #               to convert all such values individually in a loop
-        #               instead of just using pd.DataFrame(row.to_dict()...)
-        #
-        # df = pd.DataFrame(row.to_dict() for row in rows)  # see note
-        for row in rows:
-            entry = row.to_dict()
-
-            entry['train'] = np.array(entry['train'].get_untracked())
-            entry['known'] = np.array(entry['known'].get_untracked())
-            entry['unknown'] = np.array(entry['unknown'].get_untracked())
-
-            entries.append(entry)
-
-        df = pd.DataFrame(entries)
-
-    print(asctime(), 'Processing additional columns...')
-    df = df.drop('id', axis=1)  # Omit the rows IDs (SQL primary key)
-    classification(df, 90)
-    classification(df, 95)
-    classification(df, 99)
-    quartiles(df)
-    separability(df)
-
-    print(asctime(), 'Saving...')
-    with open('correlations.pickle', 'wb') as file:
-        pickle.dump(df, file, protocol=pickle.HIGHEST_PROTOCOL)
-
-    print(asctime(), 'Done')
-
-
-#
-# Variances experiment
-#
-def variances():
-    Variances.setup_db()
-
-    with orm.db_session():
-        print(asctime(), 'Selecting...')
-        rows = Variances.Cache.select()
-        entries = []
-
-        print(asctime(), 'Generating DataFrame...')
-        #
-        # NOTE(sdatko): By default the array data in Pony ORM are kept under
-        #               the pony.orm.ormtypes.TrackedArray type, so we need
-        #               to convert all such values individually in a loop
-        #               instead of just using pd.DataFrame(row.to_dict()...)
-        #
-        # df = pd.DataFrame(row.to_dict() for row in rows)  # see note
-        for row in rows:
-            entry = row.to_dict()
-
-            entry['train'] = np.array(entry['train'].get_untracked())
-            entry['known'] = np.array(entry['known'].get_untracked())
-            entry['unknown'] = np.array(entry['unknown'].get_untracked())
-
-            entries.append(entry)
-
-        df = pd.DataFrame(entries)
-
-    print(asctime(), 'Processing additional columns...')
-    df = df.drop('id', axis=1)  # Omit the rows IDs (SQL primary key)
-    classification(df, 90)
-    classification(df, 95)
-    classification(df, 99)
-    quartiles(df)
-    separability(df)
-
-    print(asctime(), 'Saving...')
-    with open('variances.pickle', 'wb') as file:
-        pickle.dump(df, file, protocol=pickle.HIGHEST_PROTOCOL)
-
-    print(asctime(), 'Done')
-
-
-#
-# Bounding boxes overlapping experiment
-#
-def overlapping():
-    BoundingBoxes.setup_db()
-
-    with orm.db_session():
-        print(asctime(), 'Selecting...')
-        rows = BoundingBoxes.Cache.select()
-
-        print(asctime(), 'Generating DataFrame...')
-        df = pd.DataFrame(row.to_dict() for row in rows)
-
-    print(asctime(), 'Processing additional columns...')
-    df = df.drop('id', axis=1)  # Omit the rows IDs (SQL primary key)
-    intersection_over_union(df)
-
-    print(asctime(), 'Saving...')
-    with open('overlapping.pickle', 'wb') as file:
-        pickle.dump(df, file, protocol=pickle.HIGHEST_PROTOCOL)
-
-    print(asctime(), 'Done')
-
-
-#
-# MVN properties estimation experiment
-#
-def properties():
-    MVNEstimation.setup_db()
-
-    with orm.db_session():
-        print(asctime(), 'Selecting...')
-        rows = MVNEstimation.Cache.select()
-
-        print(asctime(), 'Generating DataFrame...')
-        df = pd.DataFrame(row.to_dict() for row in rows)
-
-    print(asctime(), 'Processing additional columns...')
-    df = df.drop('id', axis=1)  # Omit the rows IDs (SQL primary key)
-
-    print(asctime(), 'Saving...')
-    with open('properties.pickle', 'wb') as file:
-        pickle.dump(df, file, protocol=pickle.HIGHEST_PROTOCOL)
-
-    print(asctime(), 'Done')
 
 
 #
 # Main
 #
 if __name__ == '__main__':
-    distributions()
-    correlations()
-    variances()
-    overlapping()
-    properties()
+    process(Generated, 'distributions.pickle', tracked=True, replace=True)
+    process(Correlations, 'correlations.pickle', tracked=True, replace=True)
+    process(Variances, 'variances.pickle', tracked=True, replace=True)
+    process(BoundingBoxes, 'overlapping.pickle', IoU=True)
+    process(MVNEstimation, 'properties.pickle')
