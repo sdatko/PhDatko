@@ -62,11 +62,18 @@ def main():
         COVARIANCES,
         range(ITERATIONS),  # seeds
     )
+    total = (
+        len(DIMENSIONS)
+        * len(SAMPLES)
+        * len(N_CORRELATED)
+        * len(COVARIANCES)
+        * ITERATIONS  # seeds
+    )
 
     runner = Runner()
     experiment = MVNEstimation(cached=True)
 
-    runner.run(experiment.get, tuple(iterator), unpack=True)
+    runner.run(experiment.get, iterator, unpack=True, length=total)
 
 
 if __name__ == '__main__':

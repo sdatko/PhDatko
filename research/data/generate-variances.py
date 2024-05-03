@@ -15,6 +15,8 @@ from openset.models import KNearestNeighbors  # noqa: E402
 from openset.models import LocalOutlierFactor  # noqa: E402
 from openset.models import Mahalanobis  # noqa: E402
 from openset.models import Manhattan  # noqa: E402
+from openset.models import MinMaxOutFactor  # noqa: E402
+from openset.models import MinMaxOutScore  # noqa: E402
 from openset.models import SEuclidean  # noqa: E402
 from openset.utils.runner import Runner  # noqa: E402
 
@@ -40,6 +42,8 @@ MODELS = [
     LocalOutlierFactor(20),
     Mahalanobis(),
     Manhattan(),
+    MinMaxOutFactor(),
+    MinMaxOutScore(),
     SEuclidean(),
 ]
 
@@ -96,11 +100,19 @@ def main():
         VARIANCES,
         OUTLIERS_VARIED,
     )
+    total = (
+        len(DISTANCES)
+        * len(MODELS)
+        * ITERATIONS  # seeds
+        * len(N_VARIED)
+        * len(VARIANCES)
+        * len(OUTLIERS_VARIED)
+    )
 
-    runner = Runner(32)
+    runner = Runner()
     experiment = Variances(cached=True)
 
-    runner.run(experiment.get, tuple(iterator), unpack=True)
+    runner.run(experiment.get, iterator, unpack=True, length=total)
 
 
 if __name__ == '__main__':

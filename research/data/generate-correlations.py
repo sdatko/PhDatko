@@ -15,6 +15,8 @@ from openset.models import KNearestNeighbors  # noqa: E402
 from openset.models import LocalOutlierFactor  # noqa: E402
 from openset.models import Mahalanobis  # noqa: E402
 from openset.models import Manhattan  # noqa: E402
+from openset.models import MinMaxOutFactor  # noqa: E402
+from openset.models import MinMaxOutScore  # noqa: E402
 from openset.models import SEuclidean  # noqa: E402
 from openset.utils.runner import Runner  # noqa: E402
 
@@ -40,35 +42,38 @@ MODELS = [
     LocalOutlierFactor(20),
     Mahalanobis(),
     Manhattan(),
+    MinMaxOutFactor(),
+    MinMaxOutScore(),
     SEuclidean(),
 ]
 
 ITERATIONS = 5
 
-N_FEATURES = (
-    Decimal('0.00'),
-    Decimal('0.20'),
-    Decimal('0.40'),
-    Decimal('0.60'),
-    Decimal('0.80'),
-    Decimal('1.00'),
-)
-
 N_CORRELATED = (
     Decimal('0.00'),
+    Decimal('0.10'),
     Decimal('0.20'),
+    Decimal('0.30'),
     Decimal('0.40'),
+    Decimal('0.50'),
     Decimal('0.60'),
+    Decimal('0.70'),
     Decimal('0.80'),
+    Decimal('0.90'),
     Decimal('1.00'),
 )
 
 COVARIANCES = (
     Decimal('0.00'),
+    Decimal('0.10'),
     Decimal('0.20'),
+    Decimal('0.30'),
     Decimal('0.40'),
+    Decimal('0.50'),
     Decimal('0.60'),
+    Decimal('0.70'),
     Decimal('0.80'),
+    Decimal('0.90'),
     Decimal('1.00'),
 )
 
@@ -86,16 +91,23 @@ def main():
         DISTANCES,
         MODELS,
         range(ITERATIONS),  # seeds
-        N_FEATURES,
         N_CORRELATED,
         COVARIANCES,
         OUTLIERS_CORRELATED,
+    )
+    total = (
+        len(DISTANCES)
+        * len(MODELS)
+        * ITERATIONS  # seeds
+        * len(N_CORRELATED)
+        * len(COVARIANCES)
+        * len(OUTLIERS_CORRELATED)
     )
 
     runner = Runner()
     experiment = Correlations(cached=True)
 
-    runner.run(experiment.get, tuple(iterator), unpack=True)
+    runner.run(experiment.get, iterator, unpack=True, length=total)
 
 
 if __name__ == '__main__':

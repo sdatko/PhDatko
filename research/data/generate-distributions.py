@@ -15,6 +15,8 @@ from openset.models import KNearestNeighbors  # noqa: E402
 from openset.models import LocalOutlierFactor  # noqa: E402
 from openset.models import Mahalanobis  # noqa: E402
 from openset.models import Manhattan  # noqa: E402
+from openset.models import MinMaxOutFactor  # noqa: E402
+from openset.models import MinMaxOutScore  # noqa: E402
 from openset.models import SEuclidean  # noqa: E402
 from openset.utils.runner import Runner  # noqa: E402
 
@@ -45,7 +47,8 @@ ITERATIONS = 5
 # – KNearestNeighbors,
 # – LocalOutlierFactor,
 # – Manhattan,
-# – MinMaxWindow,
+# – MinMaxOutFactor,
+# – MinMaxOutScore,
 # – SEuclidean,
 #
 dimensions = (
@@ -57,7 +60,7 @@ dimensions = (
 )
 
 training_samples = (
-    25, 50, 75,
+    10, 25, 50, 75,
     100, 250, 500, 750,
     1000, 2500, 5000, 7500,
     10000, 25000, 50000,
@@ -72,6 +75,8 @@ models = [
     LocalOutlierFactor(10),
     LocalOutlierFactor(20),
     Manhattan(),
+    MinMaxOutFactor(),
+    MinMaxOutScore(),
     SEuclidean(),
 ]
 
@@ -84,6 +89,15 @@ FAST_TO_CALCULATE_PARAMETERS = itertools.product(
     range(ITERATIONS),  # seeds
 )
 
+TOTAL_FAST_TO_CALCULATE_PARAMETERS = (
+    len(dimensions)
+    * len(DISTANCES)
+    * len(DISTRIBUTIONS)
+    * len(models)
+    * len(training_samples)
+    * ITERATIONS  # seeds
+)
+
 
 #
 # ABOF model
@@ -93,12 +107,15 @@ dimensions = (
     1, 2, 3, 5,
     10, 25, 50, 75,
     100, 250, 500, 750,
+    1000, 2500, 5000, 7500,
+    # 10000,
 )
 
 training_samples = (
     10, 25, 50, 75,
     100, 250, 500, 750,
-    1000, 2500, 5000, 7500,
+    1000,  # 2500, 5000, 7500,
+    # 10000, 25000, 50000,
 )
 
 models = [
@@ -111,7 +128,16 @@ ABOF_PARAMETERS = itertools.product(
     DISTRIBUTIONS,
     models,
     training_samples,
-    range(ITERATIONS),
+    range(ITERATIONS),  # seeds
+)
+
+TOTAL_ABOF_PARAMETERS = (
+    len(dimensions)
+    * len(DISTANCES)
+    * len(DISTRIBUTIONS)
+    * len(models)
+    * len(training_samples)
+    * ITERATIONS  # seeds
 )
 
 
@@ -123,14 +149,15 @@ dimensions = (
     1, 2, 3, 5,
     10, 25, 50, 75,
     100, 250, 500, 750,
-    1000,
+    1000,  # 2500, 5000, 7500,
+    # 10000,
 )
 
 training_samples = (
     10, 25, 50, 75,
     100, 250, 500, 750,
     1000, 2500, 5000, 7500,
-    10000,
+    10000,  # 25000, 50000,
 )
 
 models = [
@@ -145,7 +172,16 @@ IRWD_PARAMETERS = itertools.product(
     DISTRIBUTIONS,
     models,
     training_samples,
-    range(ITERATIONS),
+    range(ITERATIONS),  # seeds
+)
+
+TOTAL_IRWD_PARAMETERS = (
+    len(dimensions)
+    * len(DISTANCES)
+    * len(DISTRIBUTIONS)
+    * len(models)
+    * len(training_samples)
+    * ITERATIONS  # seeds
 )
 
 
@@ -157,7 +193,8 @@ dimensions = (
     1, 2, 3, 5,
     10, 25, 50, 75,
     100, 250, 500, 750,
-    1000, 2500, 5000,
+    1000, 2500, 5000,  # 7500,
+    # 10000,
 )
 
 training_samples = (
@@ -177,7 +214,16 @@ MAHALANOBIS_PARAMETERS = itertools.product(
     DISTRIBUTIONS,
     models,
     training_samples,
-    range(ITERATIONS),
+    range(ITERATIONS),  # seeds
+)
+
+TOTAL_MAHALANOBIS_PARAMETERS = (
+    len(dimensions)
+    * len(DISTANCES)
+    * len(DISTRIBUTIONS)
+    * len(models)
+    * len(training_samples)
+    * ITERATIONS  # seeds
 )
 
 
@@ -191,11 +237,17 @@ def main():
         IRWD_PARAMETERS,
         MAHALANOBIS_PARAMETERS,
     )
+    total = sum([
+        TOTAL_FAST_TO_CALCULATE_PARAMETERS,
+        TOTAL_ABOF_PARAMETERS,
+        TOTAL_IRWD_PARAMETERS,
+        TOTAL_MAHALANOBIS_PARAMETERS,
+    ])
 
     runner = Runner()
     experiment = Generated(cached=True)
 
-    runner.run(experiment.get, tuple(iterator), unpack=True)
+    runner.run(experiment.get, iterator, unpack=True, length=total)
 
 
 if __name__ == '__main__':
