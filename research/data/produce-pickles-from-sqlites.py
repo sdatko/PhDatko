@@ -253,6 +253,7 @@ def process(source: BaseExperiment, output: str, tracked: bool = False,
 # Main
 #
 if __name__ == '__main__':
+    np.seterr(divide='ignore', invalid='ignore')
     process(Generated, 'distributions.pickle', tracked=True, replace=True)
     process(Correlations, 'correlations.pickle', tracked=True, replace=True)
     process(Variances, 'variances.pickle', tracked=True, replace=True)
