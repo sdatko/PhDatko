@@ -26,6 +26,16 @@ file = st.selectbox(
         'overlapping.pickle',
         'properties.pickle',
         'variances.pickle',
+        'ood-per-class-20newsgroups.pickle',
+        'ood-per-class-banking77.pickle',
+        'ood-per-class-cifar10.pickle',
+        'ood-per-class-cifar100.pickle',
+        'ood-per-class-ImageNet.pickle',
+        'clusters-props-20newsgroups.pickle',
+        'clusters-props-banking77.pickle',
+        'clusters-props-cifar10.pickle',
+        'clusters-props-cifar100.pickle',
+        'clusters-props-ImageNet.pickle',
     ],
 )
 
