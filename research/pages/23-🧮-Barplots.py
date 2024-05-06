@@ -29,11 +29,11 @@ st.write('Displays the results of real-world data with pre-defined groups.')
 file = st.radio(
     label='File to view:',
     options=[
-        'ood-per-class-20newsgroups.pickle',
-        'ood-per-class-banking77.pickle',
-        'ood-per-class-cifar10.pickle',
-        'ood-per-class-cifar100.pickle',
-        'ood-per-class-ImageNet.pickle',
+        '20newsgroups',
+        'banking77',
+        'cifar10',
+        'cifar100',
+        'ImageNet',
     ],
     index=4,
     horizontal=True,
@@ -44,7 +44,8 @@ file = st.radio(
 # Data loading
 #
 try:
-    df = load_dataframe(path=os.path.join('data', file))
+    df = load_dataframe(path=os.path.join('data',
+                                          f'ood-per-class-{file}.pickle'))
 except Exception as err:
     st.error(f'{type(err).__name__}: {err}')
     st.stop()

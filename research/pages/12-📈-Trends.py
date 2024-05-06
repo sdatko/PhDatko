@@ -30,11 +30,11 @@ st.write('Determine the characteristics and stability of parameters'
 file = st.radio(
     label='File to view:',
     options=[
-        'correlations.pickle',
-        'distributions.pickle',
-        'overlapping.pickle',
-        'properties.pickle',
-        'variances.pickle',
+        'correlations',
+        'distributions',
+        'overlapping',
+        'properties',
+        'variances',
     ],
     index=1,
     horizontal=True,
@@ -45,7 +45,7 @@ file = st.radio(
 # Data loading
 #
 try:
-    df = load_dataframe(path=os.path.join('data', file))
+    df = load_dataframe(path=os.path.join('data', f'{file}.pickle'))
 except Exception as err:
     st.error(f'{type(err).__name__}: {err}')
     st.stop()
@@ -69,7 +69,7 @@ with st.container(border=True):
     third_row = st.columns(6)
     filters = {}
 
-    if file == 'correlations.pickle':
+    if file == 'correlations':
         x_inputs = [
             'n_correlated',  # 3
             'covariance',  # 4
@@ -81,7 +81,7 @@ with st.container(border=True):
         inputs = list(df.columns)[:6]
         outputs = list(df.columns)[9:]
 
-    if file == 'distributions.pickle':
+    if file == 'distributions':
         x_inputs = [
             'dimension',  # 0
             'samples',  # 4
@@ -93,7 +93,7 @@ with st.container(border=True):
         inputs = list(df.columns)[:6]
         outputs = list(df.columns)[9:]
 
-    if file == 'overlapping.pickle':
+    if file == 'overlapping':
         x_inputs = [
             'dimension',  # 0
             'samples',  # 2
@@ -103,7 +103,7 @@ with st.container(border=True):
         inputs = list(df.columns)[:4]
         outputs = list(df.columns)[4:]
 
-    if file == 'properties.pickle':
+    if file == 'properties':
         x_inputs = [
             'dimension',  # 0
             'samples',  # 1
@@ -114,7 +114,7 @@ with st.container(border=True):
         inputs = list(df.columns)[:5]
         outputs = list(df.columns)[5:]
 
-    if file == 'variances.pickle':
+    if file == 'variances':
         x_inputs = [
             'variance',  # 4
             'distance',  # 0
@@ -169,7 +169,7 @@ with st.container(border=True):
     #
     # Third row
     #
-    if file == 'correlations.pickle':
+    if file == 'correlations':
         with third_row[0]:
             key = 'n_correlated'
             filters[key] = st.select_slider(
@@ -220,7 +220,7 @@ with st.container(border=True):
                 disabled=(aggregate_seeds or multi_plots and parameter == key),
             )
 
-    if file == 'distributions.pickle':
+    if file == 'distributions':
         with third_row[0]:
             key = 'dimension'
             filters[key] = st.select_slider(
@@ -269,7 +269,7 @@ with st.container(border=True):
                 disabled=(aggregate_seeds or multi_plots and parameter == key),
             )
 
-    if file == 'overlapping.pickle':
+    if file == 'overlapping':
         with third_row[0]:
             key = 'dimension'
             filters[key] = st.select_slider(
@@ -308,7 +308,7 @@ with st.container(border=True):
                 disabled=(aggregate_seeds or multi_plots and parameter == key),
             )
 
-    if file == 'properties.pickle':
+    if file == 'properties':
         with third_row[0]:
             key = 'dimension'
             filters[key] = st.select_slider(
@@ -353,7 +353,7 @@ with st.container(border=True):
                 disabled=(aggregate_seeds or multi_plots and parameter == key),
             )
 
-    if file == 'variances.pickle':
+    if file == 'variances':
         with third_row[0]:
             key = 'n_varied'
             filters[key] = st.select_slider(

@@ -29,11 +29,11 @@ st.write('Examine the characteristics of the data representations techniques.')
 file = st.radio(
     label='File to view:',
     options=[
-        'clusters-props-20newsgroups.pickle',
-        'clusters-props-banking77.pickle',
-        'clusters-props-cifar10.pickle',
-        'clusters-props-cifar100.pickle',
-        'clusters-props-ImageNet.pickle',
+        '20newsgroups',
+        'banking77',
+        'cifar10',
+        'cifar100',
+        'ImageNet',
     ],
     index=4,
     horizontal=True,
@@ -44,7 +44,8 @@ file = st.radio(
 # Data loading
 #
 try:
-    df = load_dataframe(path=os.path.join('data', file))
+    df = load_dataframe(path=os.path.join('data',
+                                          f'clusters-props-{file}.pickle'))
 except Exception as err:
     st.error(f'{type(err).__name__}: {err}')
     st.stop()

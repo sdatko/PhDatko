@@ -32,9 +32,9 @@ st.write('Analyse the distributions of measures'
 file = st.radio(
     label='File to view:',
     options=[
-        'correlations.pickle',
-        'distributions.pickle',
-        'variances.pickle',
+        'correlations',
+        'distributions',
+        'variances',
     ],
     index=1,
     horizontal=True,
@@ -45,7 +45,7 @@ file = st.radio(
 # Data loading
 #
 try:
-    df = load_dataframe(path=os.path.join('data', file))
+    df = load_dataframe(path=os.path.join('data', f'{file}.pickle'))
 except Exception as err:
     st.error(f'{type(err).__name__}: {err}')
     st.stop()
@@ -59,7 +59,7 @@ with st.container(border=True):
     cols = st.columns(6)
     filters = {}
 
-    if file == 'correlations.pickle':
+    if file == 'correlations':
         with cols[0]:
             key = 'n_correlated'
             filters[key] = st.select_slider(
@@ -104,7 +104,7 @@ with st.container(border=True):
                 options=df[key].drop_duplicates().sort_values(),
             )
 
-    if file == 'distributions.pickle':
+    if file == 'distributions':
         with cols[0]:
             key = 'dimension'
             filters[key] = st.select_slider(
@@ -147,7 +147,7 @@ with st.container(border=True):
                 options=df[key].drop_duplicates().sort_values(),
             )
 
-    if file == 'variances.pickle':
+    if file == 'variances':
         with cols[0]:
             key = 'n_varied'
             filters[key] = st.select_slider(
