@@ -16,6 +16,12 @@ st.markdown('''
     - **📈 Trends** – makes it easier to determine the characteristics
                       and stability of measures as a function
                       of input parameters.
+    - **🧮 Barplots** – displays the results of real-world data
+                        with pre-defined groups.
+    - **🧊 Melter** – presents the real-world data results
+                      with automatic output grouping.
+    - **🏡 Properties** – offers examination of the characteristics
+                          of the data representations techniques.
     - **🖼️ Measures-illustrated** – contains figures depicting the outlierness
                                     measures and their properties.
     - **🗂 DataFrame-browser** – offers a filtered view of the data
