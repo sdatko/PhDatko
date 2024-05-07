@@ -60,25 +60,25 @@ def quartiles(df: pd.DataFrame) -> None:
 def classification(df: pd.DataFrame, treshold: int = 95) -> None:
     '''Perform train-wise classification and save results in-place.
 
-    Hypothesis: data is outlier;
-    - TN – known labeled as inlier,
-    - FP – known labeled as outlier,
-    - TP – unknown labeled as outlier,
-    - FN – unknown labeled as inlier.
+    Hypothesis: data is in-distribution;
+    - TP – known labeled as inlier,
+    - FN – known labeled as outlier,
+    - TN – unknown labeled as outlier,
+    - FP – unknown labeled as inlier.
     '''
-    df[f'TN_{treshold}'] = [
+    df[f'TP_{treshold}'] = [
         sum(known <= train[treshold])
         for train, known in zip(df['train'].values, df['known'].values)
     ]
-    df[f'FP_{treshold}'] = [
+    df[f'FN_{treshold}'] = [
         sum(known > train[treshold])
         for train, known in zip(df['train'].values, df['known'].values)
     ]
-    df[f'TP_{treshold}'] = [
+    df[f'TN_{treshold}'] = [
         sum(unknown > train[treshold])
         for train, unknown in zip(df['train'].values, df['unknown'].values)
     ]
-    df[f'FN_{treshold}'] = [
+    df[f'FP_{treshold}'] = [
         sum(unknown <= train[treshold])
         for train, unknown in zip(df['train'].values, df['unknown'].values)
     ]
