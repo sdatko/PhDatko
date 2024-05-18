@@ -56,6 +56,7 @@ except Exception as err:
 #
 with st.sidebar:
     xkcd = st.checkbox('XKCD style', value=False)
+    BERT_unify = st.checkbox('BERT unify', value=False)
 
     cols = st.columns(2)
     with cols[0]:
@@ -78,6 +79,25 @@ with st.sidebar:
                 None,
             ),
         )
+
+
+#
+# Unify results for various BERT variants – their outcomes are very similar
+#
+# NOTE: Change in place causes some cache issues, so we create a new df here
+#
+if BERT_unify:
+    BERT_hack = {
+        'BERT-base-32': 'BERT-base',
+        'BERT-base-r': 'BERT-base',
+        'BERT-tiny-10': 'BERT-tiny',
+        'BERT-tiny-64': 'BERT-tiny',
+        'BERT-tiny-s': 'BERT-tiny',
+        'BERT-tiny-s-64': 'BERT-tiny',
+    }
+
+    for to_replace, replacement in BERT_hack.items():
+        df = df.replace(to_replace, replacement)
 
 
 #
