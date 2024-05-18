@@ -415,6 +415,8 @@ with right_column:
                 markersize=10,
                 color='red',
                 alpha=0.5,
+                linestyle='',
+                label='optimal threshold',
             )
 
         if draw_tpr95:
@@ -425,6 +427,8 @@ with right_column:
                 markersize=10,
                 color='green',
                 alpha=0.5,
+                linestyle='',
+                label='TPR95 threshold',
             )
 
         ax.set_xlabel('False Positive Rate')
