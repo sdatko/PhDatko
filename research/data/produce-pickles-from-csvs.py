@@ -33,22 +33,33 @@ def replace_values(df: pd.DataFrame) -> None:
         'Minkowski': 'ED',
         'SEuclidean': 'SED',
         # representations
-        'bert-base-32_0': 'BERT-base-32',
-        'bert-base-range_0': 'BERT-base-r',
-        'bert-tiny-10_0': 'BERT-tiny-10',
-        'bert-tiny-64_0': 'BERT-tiny-64',
-        'bert-tiny-s-64_0': 'BERT-tiny-s',
-        'doc2vec_0': 'Doc2Vec',
-        'fasttext_0': 'fastText',
-        'tfidf_0': 'TF-IDF',
+        'bert-base-32': 'BERT-base-32',  # clusters-props
+        'bert-base-32_0': 'BERT-base-32',  # ood-per-class
+        'bert-base-range': 'BERT-base-r',  # clusters-props
+        'bert-base-range_0': 'BERT-base-r',  # ood-per-class
+        'bert-tiny-10': 'BERT-tiny-10',  # clusters-props
+        'bert-tiny-10_0': 'BERT-tiny-10',  # ood-per-class
+        'bert-tiny-64': 'BERT-tiny-64',  # clusters-props
+        'bert-tiny-64_0': 'BERT-tiny-64',  # ood-per-class
+        'bert-tiny-s-64': 'BERT-tiny-s',  # clusters-props
+        'bert-tiny-s-64_0': 'BERT-tiny-s',  # ood-per-class
+        'doc2vec_0': 'Doc2Vec',  # both
+        'fasttext': 'fastText',  # clusters-props
+        'fasttext_0': 'fastText',  # ood-per-class
+        'tfidf': 'TF-IDF',  # clusters-props
+        'tfidf_0': 'TF-IDF',  # ood-per-class
         # data
         'IDtest_other': 'other-test',
         'IDtrain_other': 'other-train',
-        'imagenet_o': 'ImageNetO',
+        'imagenet_o': 'ImageNet-O',
         'ood_cifar10': 'cifar10',
         'ood_cifar100': 'cifar100',
         'ood_svhn': 'SVHN',
-        'OpenImage_O': 'OpenImageO',
+        'OpenImage_O': 'OpenImage-O',
+        'places365': 'Places365',
+        'species': 'Species',
+        'sun2012': 'SUN2012',
+        'textures': 'Textures',
         'test': 'ID-test',
         'train': 'ID-train',
     }
