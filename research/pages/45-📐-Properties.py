@@ -319,13 +319,14 @@ with left_column:
         if ygrid:
             ax.grid(which=ygrid, axis='y', linewidth=0.5, linestyle='dotted')
 
-        ax.legend(
-            loc='upper center',
-            bbox_to_anchor=(0.5, 1.05),
-            ncol=99,
-            fancybox=True,
-            shadow=True,
-        )
+        if hue_axis != x_axis:
+            ax.legend(
+                loc='upper center',
+                bbox_to_anchor=(0.5, 1.05),
+                ncol=99,
+                fancybox=True,
+                shadow=True,
+            )
 
         fig.set_figwidth(fig_width)
         fig.set_figheight(fig_height)
