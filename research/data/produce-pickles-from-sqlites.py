@@ -199,8 +199,9 @@ def replace_values(df: pd.DataFrame, column: str) -> None:
         df.replace({column: to_replace}, replacement, inplace=True)
 
 
-def process(source: BaseExperiment, output: str, tracked: bool = False,
-            replace: bool = False, IoU: bool = False) -> None:
+def process(source: BaseExperiment, output: str,
+            tracked: bool = False, replace: bool = False,
+            IoU: bool = False, fix_vars: bool = True) -> None:
     print(asctime(), source.__name__, '->', output)
     source.setup_db()
 
@@ -245,6 +246,10 @@ def process(source: BaseExperiment, output: str, tracked: bool = False,
     if IoU:
         intersection_over_union(df)
 
+    if fix_vars:
+        df['mse_vars'] *= df['dimension']
+        df['mse_covs'] *= df['dimension'] / (df['dimension'] - 1)
+
     with open(output, 'wb') as file:
         pickle.dump(df, file, protocol=pickle.HIGHEST_PROTOCOL)
 
@@ -258,4 +263,4 @@ if __name__ == '__main__':
     process(Correlations, 'correlations.pickle', tracked=True, replace=True)
     process(Variances, 'variances.pickle', tracked=True, replace=True)
     process(BoundingBoxes, 'overlapping.pickle', IoU=True)
-    process(MVNEstimation, 'properties.pickle')
+    process(MVNEstimation, 'properties.pickle', fix_vars=True)
