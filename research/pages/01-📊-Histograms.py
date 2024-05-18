@@ -226,6 +226,28 @@ with st.sidebar:
             value=5,
         )
 
+    cols = st.columns(2)
+    with cols[0]:
+        xgrid = st.selectbox(
+            label='X grid',
+            options=(
+                'both',
+                'major',
+                'minor',
+                None,
+            ),
+        )
+    with cols[1]:
+        ygrid = st.selectbox(
+            label='Y grid',
+            options=(
+                'both',
+                'major',
+                'minor',
+                None,
+            ),
+        )
+
 
 #
 # Verify there is a result
@@ -338,7 +360,11 @@ with left_column:
         ax.xaxis.set_minor_locator(tck.AutoMinorLocator())
         ax.yaxis.set_minor_locator(tck.AutoMinorLocator())
 
-        ax.grid(which='both', axis='both', linewidth=0.5, linestyle='dotted')
+        if xgrid:
+            ax.grid(which=xgrid, axis='x', linewidth=0.5, linestyle='dotted')
+        if ygrid:
+            ax.grid(which=ygrid, axis='y', linewidth=0.5, linestyle='dotted')
+
         ax.legend(loc='upper right')
 
         fig.set_figwidth(fig_width)
@@ -395,7 +421,10 @@ with left_column:
         ax.locator_params(nbins=10, axis='both')
         ax.xaxis.set_minor_locator(tck.AutoMinorLocator())
 
-        ax.grid(which='both', axis='both', linewidth=0.5, linestyle='dotted')
+        if xgrid:
+            ax.grid(which=xgrid, axis='x', linewidth=0.5, linestyle='dotted')
+        if ygrid:
+            ax.grid(which=ygrid, axis='y', linewidth=0.5, linestyle='dotted')
 
         fig.set_figwidth(fig_width)
         fig.set_figheight(fig_height)
@@ -460,7 +489,11 @@ with right_column:
         ax.xaxis.set_minor_locator(tck.AutoMinorLocator())
         ax.yaxis.set_minor_locator(tck.AutoMinorLocator())
 
-        ax.grid(which='both', axis='both', linewidth=0.5, linestyle='dotted')
+        if xgrid:
+            ax.grid(which=xgrid, axis='x', linewidth=0.5, linestyle='dotted')
+        if ygrid:
+            ax.grid(which=ygrid, axis='y', linewidth=0.5, linestyle='dotted')
+
         ax.legend(loc='lower right')
 
         fig.set_figwidth(fig_width)
@@ -496,7 +529,11 @@ with right_column:
         ax.xaxis.set_minor_locator(tck.AutoMinorLocator())
         ax.yaxis.set_minor_locator(tck.AutoMinorLocator())
 
-        ax.grid(which='both', axis='both', linewidth=0.5, linestyle='dotted')
+        if xgrid:
+            ax.grid(which=xgrid, axis='x', linewidth=0.5, linestyle='dotted')
+        if ygrid:
+            ax.grid(which=ygrid, axis='y', linewidth=0.5, linestyle='dotted')
+
         ax.legend(loc='lower right')
 
         fig.set_figwidth(fig_width)

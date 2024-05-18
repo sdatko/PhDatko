@@ -58,6 +58,28 @@ with st.sidebar:
     xkcd = st.checkbox('XKCD style', value=False)
     aggregate_seeds = st.checkbox(label='Aggregate seeds', value=False)
 
+    cols = st.columns(2)
+    with cols[0]:
+        xgrid = st.selectbox(
+            label='X grid',
+            options=(
+                'both',
+                'major',
+                'minor',
+                None,
+            ),
+        )
+    with cols[1]:
+        ygrid = st.selectbox(
+            label='Y grid',
+            options=(
+                'both',
+                'major',
+                'minor',
+                None,
+            ),
+        )
+
 
 #
 # Application input
@@ -637,7 +659,11 @@ with left_column:
             ax.locator_params(nbins=10, axis='y')
             ax.yaxis.set_minor_locator(tck.AutoMinorLocator())
 
-        ax.grid(which='both', axis='both', linewidth=0.5, linestyle='dotted')
+        if xgrid:
+            ax.grid(which=xgrid, axis='x', linewidth=0.5, linestyle='dotted')
+        if ygrid:
+            ax.grid(which=ygrid, axis='y', linewidth=0.5, linestyle='dotted')
+
         legend = ax.legend(loc=legend_location)
 
         if legend_title:
