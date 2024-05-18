@@ -212,6 +212,7 @@ with st.sidebar:
     xkcd = st.checkbox('XKCD style', value=False)
     draw_optimal = st.checkbox('Draw optimal treshold', value=False)
     draw_tpr95 = st.checkbox('Draw TPR95 treshold', value=False)
+    draw_train95 = st.checkbox('Draw Train95 treshold', value=False)
 
     cols = st.columns(2)
     with cols[0]:
@@ -270,6 +271,8 @@ optimal_threshold = thresholds[optimal_idx]
 tpr95_idx = np.argmax(tpr >= 0.95)
 tpr95_threshold = thresholds[tpr95_idx]
 
+train95_threshold = train[95]
+
 precision, recall, thresholds = precision_recall_curve(y_true, y_score)
 aupr = auc(recall, precision)
 
@@ -320,6 +323,14 @@ with left_column:
                 label='TPR95 threshold',
             )
 
+        if draw_train95:
+            ax.axvline(
+                x=train95_threshold,
+                color='blue',
+                linestyle=':',
+                label='TPR95-train threshold',
+            )
+
         ax.set_xlabel('Outlierness score')
         ax.set_ylabel('Frequency')
 
@@ -368,6 +379,14 @@ with left_column:
                 color='green',
                 linestyle='-.',
                 label='TPR95 threshold',
+            )
+
+        if draw_train95:
+            ax.axvline(
+                x=train95_threshold,
+                color='blue',
+                linestyle=':',
+                label='TPR95-train threshold',
             )
 
         ax.set_xlabel('Outlierness score')
