@@ -1,0 +1,89 @@
+\section{Performance of OOD detectors for different representation spaces}
+\label{section:real-overall}
+
+The table \ref{tab:image-auroc} contains the average AUROC scores, calculated for 5 analyzed outlierness measures $OF$ (section \ref{section:measures}), specified by the representation model used to obtain the feature vectors, as well as the selected outlier data. AUROC is the commonly used measure in literature to conveniently summarize the overall performance of the outlier detection techniques, such as visible in benchmark published by Yang et al. \cite{Yang-2022}. A general dependency between the chosen representation and favorable outlierness measure for that representation can be observed.
+
+The most important observation is that the performance of OOD detector is related to the utilized representation model and independent of the analyzed outlier data collection. Some representations favor specific OOD detectors, while other OOD detectors perform worse on given representations – in some cases, notably for EfficientNet and ResNet, the differences in OOD detectors performance are significant.
+
+The following general conclusions can be made:
+\vspace{-0.5\baselineskip}
+\begin{itemize}
+    \item For ResNet: the best measure appears to be SED, while the worst is MDP.
+    \item For ViT: LOF and MD offer best performance, SED and MDP turn out the worst.
+    \item For EfficientNet: kNN performs best, LOF and MDP have the worst results.
+    \item For ConvNeXT: SED appears best, along wit kNN, while LOF and MDP – worse.
+    \item For CLIP and CoCa: kNN outperforms other measures, SED is very close to top, while MDP obtains the worst results in all cases.
+\end{itemize}
+
+Overall, the CLIP and CoCa representations offer the highest AUROC scores, making those the best in terms of OOD-generalization, no matter what kind of outliers dataset was used. It is also worth to notice that MDP, although commonly recommended in literature, performed bad in general – it achieved the worst results in most cases and it is never better than MD or SED (except for ViT).
+
+However, it turns out that such results presentation effectively hides some facts that are especially important from the safety-critical applications. Hence, the more detailed analysis is useful, presented in next section.
+
+\begin{table}[t]
+    \centering
+    \small
+    \setlength{\tabcolsep}{0.64em}
+    \renewcommand{\arraystretch}{1.15}
+    \begin{tabular}{l|l|cccccc}
+        \toprule
+        \toprule
+            outlier data & measure & CLIP & CoCa & {\footnotesize ConvNeXT} & {\footnotesize EfficientNet} & ResNet & ViT \\
+        \midrule
+        \midrule
+            \multirow{5}{*}{ImageNet-O}
+            & kNN & \best{0.998} & \best{0.996} & \best{0.977} & \best{0.966} & 0.766 & 0.915 \\
+            & LOF & 0.986 & 0.979 & 0.971 & 0.873 & 0.770 & \best{0.957} \\
+            & MD & 0.993 & 0.982 & --- & 0.946 & ---  & 0.952 \\
+            & MDP & \worst{0.955} & \worst{0.935} & \worst{0.943} & \worst{0.761} & \worst{0.608} & 0.909 \\
+            & SED & \best{0.998} & 0.993 & \best{0.977} & 0.932 & \best{0.877} & \worst{0.901} \\
+        \midrule
+            \multirow{5}{*}{iNaturalist}
+            & kNN & 0.998 & \best{0.996} & \best{0.953} & \best{0.984} & 0.777 & 0.931 \\
+            & LOF & 0.986 & 0.974 & \worst{0.925} & \worst{0.756} & 0.727 & 0.969 \\
+            & MD & 0.990 & 0.981 & --- & 0.976 & --- & \best{0.977} \\
+            & MDP & \worst{0.885} & \worst{0.897} & 0.926 & 0.844 & \worst{0.487} & 0.948 \\
+            & SED & \best{0.999} & 0.995 & 0.948 & 0.917 & \best{0.903} & \worst{0.922} \\
+        \midrule
+            \multirow{5}{*}{NINCO}
+            & kNN & \best{0.998} & \best{0.996} & 0.963 & \best{0.975} & 0.738 & 0.938 \\
+            & LOF & 0.987 & 0.976 & 0.937 & 0.814 & 0.711 & 0.971 \\
+            & MD & 0.992 & 0.981 & --- & 0.957 & --- & \best{0.974} \\
+            & MDP & \worst{0.931} & \worst{0.916} & \worst{0.936} & \worst{0.758} & \worst{0.452} & 0.943 \\
+            & SED & \best{0.998} & 0.994 & \best{0.965} & 0.917 & \best{0.874} & \worst{0.928} \\
+        \midrule
+            \multirow{5}{*}{OpenImage-O}
+            & kNN & \best{0.999} & \best{0.998} & 0.959 & \best{0.974} & 0.780 & 0.950 \\
+            & LOF & 0.981 & 0.978 & \worst{0.895} & \worst{0.777} & 0.742 & \best{0.975} \\
+            & MD & 0.995 & 0.986 & --- & 0.956 & --- & 0.974 \\
+            & MDP & \worst{0.963} & \worst{0.949} & 0.933 & 0.782 & \worst{0.518} & 0.942 \\
+            & SED & \best{0.999} & 0.996 & \best{0.966} & 0.883 & \best{0.886} & \worst{0.941} \\
+        \midrule
+            \multirow{5}{*}{Places365}
+            & kNN & \best{0.999} & \best{0.998} & 0.964 & \best{0.977} & 0.783 & 0.939 \\
+            & LOF & 0.982 & 0.979 & \worst{0.915} & \worst{0.755} & 0.740 & \best{0.969} \\
+            & MD & 0.994 & 0.984 & --- & 0.960 & --- & 0.968 \\
+            & MDP & \worst{0.961} & \worst{0.941} & 0.933 & 0.808 & \worst{0.505} & 0.928 \\
+            & SED & \best{0.999} & 0.994 & \best{0.969} & 0.897 & \best{0.887} & \worst{0.927} \\
+        \midrule
+            \multirow{5}{*}{SUN2012}
+            & kNN & \best{0.999} & \best{0.997} & 0.965 & \best{0.974} & 0.765 & 0.931 \\
+            & LOF & 0.984 & 0.979 & 0.930 & 0.761 & 0.710 & \best{0.965} \\
+            & MD & 0.995 & 0.982 & --- & 0.950 & --- & 0.964 \\
+            & MDP & \worst{0.967} & \worst{0.929} & \worst{0.929} & \worst{0.760} & \worst{0.429} & \worst{0.916} \\
+            & SED & 0.998 & 0.990 & \best{0.969} & 0.893 & \best{0.875} & 0.919 \\
+        \midrule
+            \multirow{5}{*}{Textures}
+            & kNN & \best{0.999} & \best{0.995} & 0.982 & \best{0.983} & 0.840 & 0.943 \\
+            & LOF & 0.989 & 0.977 & \worst{0.948} & \worst{0.807} & 0.829 & 0.971 \\
+            & MD & 0.995 & 0.976 & --- & 0.974 & --- & \best{0.975} \\
+            & MDP & \worst{0.972} & \worst{0.923} & 0.964 & 0.890 & \worst{0.729} & 0.948 \\
+            & SED & 0.998 & 0.989 & \best{0.988} & 0.941 & \best{0.922} & \worst{0.933} \\
+        \bottomrule
+        \bottomrule
+    \end{tabular}
+    \caption{Average AUROC scores observed for various outlierness measures $OF$, calculated between the in-distribution data (ImageNet1K) and 7 other datasets (outliers), utilizing different representation generators for feature vectors. In each column the result for the best OOD detector is marked with \best{bold}, and the worst observed result –~with~\worst{italic}.}
+    \label{tab:image-auroc}
+    \vspace{-3.6em}
+\end{table}
+
+\cleardoublepage{}

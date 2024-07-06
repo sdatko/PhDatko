@@ -1,0 +1,53 @@
+\section{Data sources and experiment organization}
+\label{section:real-organization}
+
+During the research, the performance of OOD measures in the OOD detection benchmarks was analyzed, involving both image data and text documents as inputs.
+
+For image data, the ImageNet-1K \cite{Deng-2009} dataset was selected as the in-distribution (ID) data, containing 1`281`167 training samples in total, divided into $m = 1000$ classes (i.e., roughly 1300 samples per class). The following datasets were utilized as the source of out-of-distribution (OOD) samples:
+\vspace{-0.5\baselineskip}
+\begin{itemize}
+    \item ImageNet-O \cite{Hendrycks-2021-adv}\footnote{\url{https://github.com/hendrycks/natural-adv-examples}},
+    \item iNaturalist \cite{VanHorn-2018}\footnote{\url{https://github.com/visipedia/inat_comp}},
+    \item NINCO \cite{Bitterwolf-2023}\footnote{\url{https://github.com/j-cb/NINCO}},
+    \item OpenImage-O \cite{Wang-2022}\footnote{\url{https://github.com/haoqiwang/vim}},
+    \item Places365 \cite{Zhou-2017}\footnote{\url{http://places2.csail.mit.edu}},
+    \item SUN2012 \cite{Xiao-2010}\footnote{\url{https://groups.csail.mit.edu/vision/SUN/hierarchy.html}},
+    \item Textures (Describable Textures Dataset [DTD]) \cite{Cimpoi-2013}\footnote{\url{https://www.robots.ox.ac.uk/~vgg/data/dtd/}}.
+\end{itemize}
+
+The representation techniques, mentioned in section \ref{section:representations}, were used to obtain the feature vectors from the images, utilizing models that were pre-trained for the ImageNet-1K dataset (ConvNeXT, EfficientNet, ResNet, ViT) or the Laion2B dataset \cite{Ilharco-2021} (CLIP, CoCa). The feature vectors were extracted from the penultimate layer of the pre-trained neural network models.
+
+For each representation, a collection of feature vectors was produced from the ImageNet training data (about 1300 samples per ID class –~clusters $T_i$; $i$~–~class identifier), ImageNet validation data (50 samples per class –~clusters $K_i$) and the outliers datasets listed above (clusters $U_j$; $j$~–~dataset identifier). Then, for each ImageNet class $i$:
+\vspace{-0.5\baselineskip}
+\begin{itemize}
+    \item The OOD detector with selected outlierness measure $OF$ was fitted to the feature vectors corresponding to the class training data $T_i$.
+    \item Using the fitted OOD detector, the outlierness scores were calculated for each of the obtained feature vectors from:
+          \begin{itemize}
+              \item the class training data $T_i$,
+              \item the class validation samples $K_i$,
+              \item all data from the selected outliers/OOD dataset $U_j$.
+          \end{itemize}
+    \item The AUROC values between the scores obtained for clusters $K_i$ and $U_j$ were calculated (determining the separability between ID and OOD data).
+    \item The sensitivity and specificity measures were computed, as proposed in section \ref{section:calibration} – to determine the performance of ID samples recognition (sensitivity – using $K_i$ data) and OOD detection (specificity – using $U_j$ data) when the detection threshold $t$ is calibrated so that $95\%$ of ID training samples ($T_i$ data) are recognized correctly as~in-distribution.
+\end{itemize}
+
+For text documents, there are no standard datasets available that are widely used for outlier/OOD detection benchmarks, hence in experiment both the ID and OOD examples were selected by class-wise division of utilized dataset. The study on text data was conducted on two kinds of documents: long (e-mails) and short (sentences).
+\vspace{-0.5\baselineskip}
+\begin{itemize}
+    \item For long documents, the 20newsgroups dataset \cite{Lang-1995}\footnote{\url{http://qwone.com/~jason/20Newsgroups/}} was used\footnote{\scriptsize\url{https://scikit-learn.org/stable/datasets/real_world.html\#the-20-newsgroups-text-dataset}}, containing around 18000 documents from 20 labeled topic categories. The dataset was arbitrary divided into ID samples (17 categories) and OOD data (3 categories).
+    \item For short documents, the banking77 dataset \cite{Casanueva-2020}\footnote{\url{https://github.com/PolyAI-LDN/task-specific-datasets}} was used, containing about 13000 sentences (customer service queries) labeled with 77 classes (customer intents). The dataset was randomly divided into ID samples (62 classes) and OOD examples (15 classes).
+\end{itemize}
+
+The feature vectors from the text documents were produced using the pre-trained BERT (2 variants: base and tiny) and fastText models; in case of Doc2Vec and TF-IDF the models were built based on the training data. The calculation of AUROC scores and classification with respect to the training samples were performed analogously how the image data were analyzed.
+
+In the conducted research the OOD detectors involved following $OF$ measures: kNN, LOF, MD, MDP and SED. The angle-based OOD detectors, described in section \ref{section:measures}, are not commonly used in large-scale image recognition benchmarks (such as ImageNet) due to their high computational cost. Three of the studied measures are similar, based on the (co)variances estimation:
+\vspace{-0.5\baselineskip}
+\begin{itemize}
+    \item MD – involves the estimation of full covariance matrix to capture the correlations in data, calculated per each known ID class, hence each matrix is produced from relatively small number of samples, which results in instability and higher estimation errors (section \ref{section:Mahalanobis}).
+    \item MDP – modifies the MD by utilization of the pooled covariance matrix, i.e., one common covariance matrix is calculated for data from all $m$ known ID classes (section \ref{section:Mahalanobis}).
+    \item SED – assumes no correlations in data, which corresponds to the diagonal covariance matrix, i.e., only the axis-wise variances are calculated, improving the stability of the distance calculation (section \ref{section:SEuclidean}).
+\end{itemize}
+
+The MDP variant of Mahalanobis distance is a standard widely used and recommended in the OOD detection literature \cite{Lee-2018}\cite{Fort-2021}\cite{Tajwar-2021}\cite{Du-2022} –~as an approach to increase the number of samples involved in covariance matrix calculation, effectively reducing the estimation error (section \ref{section:estimation-results}). However, as shown in later the sections, this approach results in a~new kind of error, due to the fact that ID classes are characterized by various correlation degrees, effectively making it one of the worst solutions of all studied.
+
+\cleardoublepage{}
