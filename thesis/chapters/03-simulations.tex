@@ -1,13 +1,19 @@
-\chapter{Simulations}
+\chapter{Performance of OOD detectors on~the~simulated data}
 \label{chapter:simulations}
 
-\todo{Do zrobienia}  % TODO
-\lipsum[1]
+This chapter contains the description of the conducted numerical study. The~research was focused on comparing the performance of various algorithms (outlierness measures) for detecting the out-of-distribution data and their ability to properly recognize the~data coming from the same distribution as the training set. The different properties of~these algorithms were observed as an effect of considered parameters changes, such as the~number of training samples, dimension of feature vectors, number of correlated features and the variance value of features. The performance was analyzed in terms of ID-OOD separability, expressed as AUROC score, as well as the classification results (sensitivity, specificity) using threshold calibrated at $95\% TPR$ with respect to the training data. Finally, performed the analysis of errors related to (in)accurate representations of training data by the outlier detectors, considering the influence of the feature space dimensionality and the number of samples. The involved data organization (number of training samples, dimension of feature vectors, Multivariate Normal Distribution) reflects the characteristics of (some) data from the subsequently analyzed real-world benchmark (chapter \ref{chapter:real-data}).
+
+\cleardoublepage{}
 
 
-\section{Experiments organisation}
-\label{section:experiments}
+\input{chapters/03a-distributions}
+\input{chapters/03b-correlations}
+\input{chapters/03c-variances}
+\input{chapters/03d-overlapping}
+\input{chapters/03e-estimation}
 
-\todo{Do zrobienia}  % TODO
-\lipsum[1]
 
+\section{Reproducibility of results}
+\label{section:reproductibility}
+
+All experiments were conducted several times to ensure that the overall patterns and trends were captured, rather than observing a single specific exception – hence the error bars were drawn on plots in this chapter. Additionally, all initialization parameters for the involved pseudo-random number generators (PRNGs) were recorded, so any examined case can be recreated and inspected further in another study, utilizing the~tools described in~appendix \ref{chapter:source-code}.

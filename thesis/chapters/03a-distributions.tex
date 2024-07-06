@@ -1,0 +1,33 @@
+\section{Baseline – samples, dimensions and distances}
+\label{section:distributions-experiment}
+
+The goal of the first conducted experiment is to observe the behavior of selected outlierness measure and analyze their performance in the outlier detection task –~and to establish the baseline for more specific examinations, performed in further sections. The~effect of~three major parameters is considered: number of training samples $n$, dimension of feature vectors $d$ and the distance to out-of-distribution samples $h$; additionally utilized three different generator distribution functions to produce the data clusters – for even more versatile insight.
+
+It should be noted that the organization of the simulated numerical study includes the ranges of $n$ and $d$ parameters values which are encountered in common OOD detection benchmarks for image and text recognition using Deep Learning models (chapter \ref{chapter:real-data}).
+
+
+\subsection{Experiment organization}
+\label{section:distributions-organization}
+
+The experiment is organized as follows:
+\vspace{-0.5\baselineskip}
+\begin{itemize}
+    \item First, 3 data clusters are generated.
+          \begin{itemize}
+              \item The set of \underline{training} data $T$, representing the in-distribution (ID) data, containing $n$ samples of dimension $d$, produced from a~chosen generator~$G$ (\textit{Gaussian}/\textit{MVN}, \textit{triangular} or \textit{uniform} distribution – that is located around the~center of~the coordinate system $\mu = [0, 0, \dots, 0]$ with spread of $\pm 1$).
+              \item The set of \underline{known} data $K$, representing a testing dataset (another examples of~ID~data), generated from the same distribution as $T$, with a~fixed number of $1000$ samples. It is used to analyze the sensitivity of the detector, i.e., the~ability to properly recognize testing data as similar to the training data.
+              \item The set of \underline{unknown} data $U$, representing out-of-distribution (OOD) data and consisting of a~fixed number of $1000$ samples, produced by the same generator as $T$, however with the distribution center shifted by the distance $h$~in~space (so the mean is at location $[\frac{h}{\sqrt{d}}, \frac{h}{\sqrt{d}}, \dots, \frac{h}{\sqrt{d}}]$). It is used to evaluate the specificity of the algorithm (i.e., proper detection of OOD samples).
+          \end{itemize}
+    \item The selected algorithm $OF$ (Outlier Factor) is fitted to the training dataset $T$.
+    \item Next, the outlierness scores are calculated for each element of sets $T$, $K$ and $U$.
+    \item The separability between clusters $K$ and $U$, using the selected $OF$, is analyzed by~calculating the Area Under the Receiver Operating Characteristic (AUROC).
+    \item The classification of data from clusters $K$ and $U$ with respect to the dataset $T$ and outlierness measure $OF$ is performed, using the threshold value $t$ selected as the 95th and the 99th percentile of outlierness scores obtained for the cluster $T$.
+\end{itemize}
+
+Summarizing, the input parameters that vary in the experiment are: number of training samples $n$, dimension of feature space $d$, distance to the outliers $h$, outlierness measure $OF$ and the generator distribution $G$.
+
+Additionally, for each combination of parameters, the experiment was repeated several times with various values of the generator seed $\xi$ (that affected the values within $T$, $K$ and $U$) to observe the variability of results.
+
+
+\input{chapters/03a-results-properties}
+\input{chapters/03a-results-trends}
