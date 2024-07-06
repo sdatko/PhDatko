@@ -8,6 +8,7 @@
 \usepackage{lmodern}
 \usepackage{microtype}
 \usepackage{setspace}
+\usepackage[dvipsnames]{xcolor}
 
 \usepackage[a4paper,
             bindingoffset=0.5cm,
@@ -24,6 +25,7 @@
 \usepackage{caption}
 \usepackage{changepage}
 \usepackage{enumitem}
+\usepackage{esvect}
 \usepackage{float}
 \usepackage{graphicx}
 \usepackage[bookmarks,pdfusetitle,unicode]{hyperref}
@@ -35,10 +37,16 @@
 \usepackage[newfloat]{minted}
 \usepackage[all,defaultlines=3]{nowidow}  % prevent single lines between pages
 \usepackage{physics}
-\usepackage{showlabels}  % TODO comment/remove at the end
-\usepackage{siunitx}
+% \usepackage{showlabels}  % TODO comment/remove at the end
+% \usepackage{siunitx}
+\usepackage{subcaption}
 \usepackage{tikz}
 \usepackage[colorinlistoftodos,textsize=tiny]{todonotes}
+\usepackage{ulem}
+
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{mparhack}
 
 % reduce the hyphenation to only where it is *really* necessary
 % but do not remove it completely – to avoid the Overfull \hbox
@@ -80,10 +88,36 @@
 \usepackage{chngcntr}
 \counterwithout{footnote}{chapter}
 
+% prefer leaving empty space on the bottom of the page
+% rather than expading the spaces between elements
+\raggedbottom
+
+% allow marking pages intentionally left blank
+\makeatletter
+    \def\markIntentionallyBlankPages{
+        \def\cleardoublepage{\clearpage%
+            \if@twoside
+                \ifodd\c@page\else
+                    \vspace*{\fill}
+                    {
+                        \centering
+                        (This page is intentionally left blank)
+                        \par
+                    }
+                    \vspace{\fill}
+                    \newpage
+                    \if@twocolumn\hbox{}\newpage\fi
+                \fi
+            \fi
+        }
+    }
+\makeatother
+
 % captions customization
 \captionsetup{justification=centering}
 \captionsetup{font=small,format=plain,labelfont=bf}
 \captionsetup{belowskip=2.0em}
+\captionsetup[subfigure]{belowskip=0em}
 
 % dotted borders around links in PDF viewers
 \hypersetup{pdfborderstyle=/S/D/D[3 2]/W 0.25,pdfborder=0 0 1}
@@ -92,15 +126,35 @@
 % \hypersetup{colorlinks,allcolors=black}
 
 % restore the \qty command from siunitx package
-\AtBeginDocument{\RenewCommandCopy\qty\SI}
+% \AtBeginDocument{\RenewCommandCopy\qty\SI}
+
+% amsthm confiugration
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}{Corollary}
+\newtheorem{lemma}{Lemma}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+
+% \theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+
+% avoid moving figures to separate pages
+% \renewcommand{\topfraction}{.8}
+% \renewcommand{\floatpagefraction}{.8}
 
 % miscellaneous and additional text formatting
 \setstretch{1.25}
+\captionsetup{font={stretch=1.2}}
 \setlength{\parskip}{0.75em}
 \setlength{\headheight}{15pt}
 \addtolength{\topmargin}{-3pt}
 
 \setminted{fontsize=\small,baselinestretch=1}
+
+% custom helper commands
+\newcommand{\best}[1]{\textcolor{Green}{\textbf{#1}}}
+\newcommand{\worst}[1]{\textcolor{Red}{\textit{#1}}}
 
 
 %
@@ -156,6 +210,7 @@
 
     \pagenumbering{roman}
     \setcounter{page}{1}
+    \markIntentionallyBlankPages
 
     \include{chapters/00c-acknowledgments}
     \cleardoublepage
