@@ -1,0 +1,24 @@
+\section{Measures of outlierness used by OOD detectors}
+\label{section:measures}
+
+For quantifying the similarity of a given feature vector $v \in \mathbb{R}^d$ with respect to a~specified candidate class $c_T$, represented by a training cluster $T$, we define a measure function $OF(v, T)$ such as that
+\begin{equation}
+    OF(v, T) : \mathbb{R}^d \rightarrow \mathbb{R},
+\end{equation}
+i.e., for a given feature vector $v$ of dimension $d$ it assigns a single real number value as an~output. That value can be intuitively interpreted as a~distance of a~given feature vector $v$ from the cluster $T$, hence typically the greater value the more distant the vector is, although this is algorithm-specific and there are known algorithms that present the opposite behavior. The exact formula on how to calculate the output value is also specific to a~particular algorithm – the differences include such factors as:
+\begin{itemize}
+    \item[–] how is the target cluster $T$ being represented?
+    \item[–] which metric is used to calculate the distance?
+\end{itemize}
+
+It should be noticed that the outlierness measures usually do not define absolutely at which output value the given data vector $v$ shall be marked as an outlier. Hence, the proposed procedure of finding a~threshold value and performing the open-set classification, described in section \ref{section:procedure}.
+
+
+% NOTE: filenames with -z for better order in file manager...
+\input{chapters/02c-measurez-abof}
+\input{chapters/02c-measurez-euclidean}
+\input{chapters/02c-measurez-irwd}
+\input{chapters/02c-measurez-knn}
+\input{chapters/02c-measurez-lof}
+\input{chapters/02c-measurez-mahalanobis}
+\input{chapters/02c-measurez-seuclidean}

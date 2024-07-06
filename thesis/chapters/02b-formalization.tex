@@ -1,0 +1,170 @@
+\section{Task formalization}
+\label{section:formalization}
+
+
+\subsection{Definitions and notation}
+\label{section:notation}
+
+The classification is a task of assigning elements, such as images, documents, etc., to a named group or category identifying elements that share the same properties, e.g., subject, authorship, etc.
+
+The elements are represented using feature vectors, usually noted as $v$ or~$x$. Each feature vector is a $d$-dimensional array of real numbers, i.e., $v \in \mathbb{R}^d$, $x \in \mathbb{R}^d$. Each~such~real number – vector's component, e.g., marked $v_j$ for $j$-th component, denotes the presence or strength of some attribute, so called feature, in the element, e.g., number of some word occurrences in a~document or appearance of shape in an~image –~although the interpretation of individual components of feature vectors may be far less obvious, or even not doable at all, for some representation algorithms (section \ref{section:representations}). The~$d$ is a~dimension of the feature vector, $d \in \mathbb{N}$, equal to the number of~vector's components. Feature vectors are subject to operations described by a branch of mathematics known as vector algebra.
+
+A set of feature vectors $x_i$ is called a cluster, $x_i \in K$. The $n$ is the number of samples (feature vectors) in the cluster. Cluster $K$ is often represented as a~matrix of size $n \times d$, i.e., $n$~rows and $d$~columns. Hence, in that representation $K[i, j]$ (or~$K_{i,j}$) denotes the $j$-th component of the $i$-th feature vector; also $K[i,*] = x_i$.
+
+The group of elements that share the same properties is usually referred to as the class or the category. It is a~label, denoted as $c$, typically a~string or a~number, that is assigned by a~classifier to an element. The set of all classes, $c_l \in C$, includes all possible outcomes of a~classifier, $\abs{C} = m$. If there is a~known class $c_K$ pre–associated with all elements of a~cluster $K$, then such cluster is often called a~training cluster; a collection of training clusters for all classes $c_l \in C$ is called a~dataset $\mathcal{D}$.
+
+The dataset is typically represented as an~augmented matrix that combines the~matrix of all available feature vectors, $X = \left[ K_1^\top | K_2^\top | ... | K_m^\top \right]^\top$, with a~column vector of class labels $y$ that associates each feature vector $x_i$ with a~class $c_i$, i.e., $\mathcal{D} = (X | y) \sim (x_i | c_i)$.
+
+The classifier is an algorithm that assigns a class label to a given feature vector,
+\begin{equation}
+    f(v) : \mathbb{R}^d \rightarrow C
+    .
+\end{equation}
+It may utilize any of machine learning techniques, such as neural networks, decision trees, support vector machines or probabilistic models, capable of distinguishing between data using a~defined set of parameters. The function $f$ is selected and designed to best fit the training data, e.g., based on the empirical risk minimization or the structural risk minimization \cite{Vapnik-1999}, reducing the loss function related to $f(x_i) \neq y_i$ error. The process of identifying relevant parameters and their weighted importance related to features, utilizing a~dataset with one or more training clusters, is referred to as the training of~a~model \cite{Hastie-2009}.
+
+\clearpage{}
+
+Summarizing, in short:
+\vspace{-0.5\baselineskip}
+\begin{itemize}
+    \item $v$, $x_i$ – a feature vector.
+    \item $K$ – a cluster, often represented as a matrix of feature vectors $x_i \in K$.
+    \item $n$ – a number of samples (feature vectors) in a cluster.
+    \item $d$ – a dimension of each feature vector.
+    \item $c$ – a class/category, i.e., a label assigned by a classifier, $c \in C$.
+    \item $m$ – a number of known classes, $m = \abs{C}$.
+    \item $f$ – a classification algorithm, that assigns $c$ for a given $v$.
+\end{itemize}
+
+
+\subsection{Procedure for open-set classification}
+\label{section:procedure}
+
+In this research, the \textit{post hoc} approach for open-set classification in considered, involving two-step procedure described by Walkowiak et al. \cite{Walkowiak-2018-asmbi}. Assuming that for a~given class $c$ there exist a training cluster $T$ and the task is to classify element $v$, it~can be summarized as follows:
+\vspace{-0.5\baselineskip}
+\begin{enumerate}
+    \item First, the traditional classifier performs a closed-set classification, assigning best possible candidate class $c$ for a given feature vector $v$.
+    \item Second, the verification is made with respect to the available training samples, i.e.~with respect to the~known in-distribution (ID) data for the~class $c$ – rejecting the~assignment if $v$ is not similar to examples from cluster $T$.
+\end{enumerate}
+
+The verification is a second classification task to perform, that involves a function $OF$ to measure the (dis)similarity of the element $v$ compared to the training examples from available dataset $T$ – expressed as the score $s$. Several ideas and illustrations of such $OF$ measure are discussed in section \ref{section:measures},
+\begin{equation}
+    s = OF(v, T).
+    \label{eq:score}
+\end{equation}
+
+The decision function in that case compares the obtained score value $s$ with a~defined threshold value $t$, i.e., when $s$ is greater than $t$ we reject the assignment and classify $v$ as the outlier,
+\begin{equation}
+    f(v)
+    =
+    \left\{
+        \begin{array}{lll}
+            c
+                ~\quad~ &
+                \mathrm{if} ~ s \leq t
+                ~ &
+                \Rightarrow \mathrm{ID},
+                \\
+            \varnothing
+                ~\quad~ &
+                \mathrm{otherwise}
+                ~ &
+                \Rightarrow \mathrm{OOD}.
+        \end{array}
+    \right.
+    \label{eq:open-set-classification}
+\end{equation}
+
+The threshold value $t$ in the conducted research is selected \textit{a priori} as the $n$-th percentile ($P_n$) of scores calculated for all elements within the cluster $T$ – i.e., a value that is greater than $n\%$ of typical scores observed within that cluster,
+\begin{equation}
+    t = {P_n}\Big(
+        \big\{
+            ~
+            \forall v \in T:
+            ~
+            OF(v, T)
+            ~
+        \big\}
+    \Big).
+    \label{eq:threshold}
+\end{equation}
+The value of the $t$ can also be defined according to the commonly used standard statistical procedures to detect extreme observations in univariate distributions, e.g., based on the interquartile range (IQR) cutoff (e.g., proposed in \cite{Tukey-1977}\cite{Walkowiak-2018-asmbi}).
+
+
+\subsection{Verification of OOD detection in feature space}
+\label{section:verification}
+
+For evaluation described in chapters \ref{chapter:simulations} (sections \ref{section:distributions-experiment}, \ref{section:correlations-experiment} and \ref{section:variances-experiment}) and \ref{chapter:real-data} (sections \ref{section:real-separability} and \ref{section:real-classification}), apart from the training data cluster $T$, two additional data clusters are utilized: the~testing cluster $K$, representing known data that come from the same in-distribution as $T$; and the outliers data cluster $U$, containing examples that should not be assigned to~any known class $c \in C$, i.e., out-of-distribution.
+
+Each vector $v \in (K \cup U)$ is classified as either ID or OOD with respect to the training data $T$. The positive reply from the classifier is associated with a recognition of~in-distribution data; the negative response from the classifier corresponds to detecting an outlier. The following four outcomes of classifier are possible:
+\vspace{-0.5\baselineskip}
+\begin{itemize}
+    \item \textbf{TP} – \textbf{True Positive} – known data was \underline{correctly} labeled as an inlier,
+    \item \textbf{FN} – \textbf{False Negative} – known data was \dashuline{incorrectly} labeled as an outlier,
+    \item \textbf{TN} – \textbf{True Negative} – unknown data was \underline{correctly} labeled as an outlier,
+    \item \textbf{FP} – \textbf{False Positive} – unknown data was \dashuline{incorrectly} labeled as an inlier.
+\end{itemize}
+Based on outcomes, results of classification can be measured with traditional metrics:
+\vspace{-0.5\baselineskip}
+\begin{itemize}
+    \item \textbf{sensitivity} – the proportion of correct positive responses out of all expected,
+          \begin{equation}
+              sensitivity
+              =
+              \frac{
+                  TP
+              }{
+                  TP + FN
+              }
+              ~,
+              \label{eq:sensitivity}
+          \end{equation}
+    \item \textbf{specificity} – the proportion of correct negative replies out of all expected ones,
+          \begin{equation}
+              specificity
+              =
+              \frac{
+                  TN
+              }{
+                  FP + TN
+              }
+              ~,
+              \label{eq:specificity}
+          \end{equation}
+    \item \textbf{accuracy} – the overall proportion of correct predictions out of all assignments,
+          \begin{equation}
+              accuracy
+              =
+              \frac{
+                  TP + TN
+              }{
+                  TP + FP + TN + FN
+              }
+              ~.
+              \label{eq:accuracy}
+          \end{equation}
+\end{itemize}
+
+The sensitivity is often referred to as True Positive Rate (TPR), while the specificity is also known as True Negative Ratio (TNR). The intuitive interpretation of those metrics in the context of conducted experiments is that the sensitivity describes the ability of correctly recognizing the in-distribution data, while the specificity is related to detector's capability of properly identifying out-of-distribution samples. The ideal, desired scenario is that there are no incorrect assignments made by the classifier, i.e., $FP = FN = 0$, hence $sensitivity = specificity = accuracy = 1.0$ ideally.
+
+
+\subsection{Calibration with respect to the training data}
+\label{section:calibration}
+
+The literature standard is to measure and compare the OOD detectors performance by the AUROC scores – Area Under the Receiver Operating Characteristic. In this approach, the~decision function values (score $s$, formula \ref{eq:score}) are calculated for all known \dashuline{testing} samples (ID) and available out-of-distribution examples (OOD), ignoring the relation to \underline{training} data used to produce the machine learning model. Then, obtained values are sorted and iterated through, calculating True Positive Rate (TPR) and False Positive Rate (FPR) for each score value (treated as threshold here), i.e., counting the correctly classified in-distribution data and incorrectly classified out-of-distribution samples. This allows to produce the Receiver Operating Characteristic (ROC) curve and the area under it (AU-) can be computed numerically – summarized as $AUROC$, with ideal value being $AUROC = 1.0$; any value $AUROC \leq 0.5$ means the classifier performs worse than randomly given assignments.
+
+Effectively, this measures the detectors abilities to correctly distinguish \dashuline{testing} samples (ID) from outliers (OOD). However, as show the results of conducted research (chapter \ref{chapter:simulations}), even though some methods may promise effective distinguishing (i.e., reach high AUROC values), they also render \dashuline{testing} samples as distant from the available \underline{training} data. In some cases the \dashuline{testing} samples may appear closer to the outliers than the actual \underline{training} samples, although both \dashuline{testing} and \underline{training} samples come from the same distribution (figure \ref{fig:hists-dimensions}). While in such cases the successful utilization of outlier detector is theoretically possible, it would require calibration according to the additional validation data, rather than with respect to the available \underline{training} samples, which is vague and difficult to justify practically.
+
+The existing literature \cite{Lee-2018} suggests to measure the performance of OOD detectors by calculating $TNR$ value at $95\%TPR$. However the calculation is performed on \dashuline{testing} in-distribution data, while the reliable calibration for real-world applications requires relying on \underline{training} in-distribution samples only.
+
+Hence, the contribution and proposal of this work is that the outlier/OOD detectors shall be additionally compared by the OOD detection performance when the OOD detection threshold is calibrated based on the ID \underline{training} data (i.e., the classification task with respect to the \underline{training} samples), not only by their ID-OOD separability potential (AUROC score) utilizing the \dashuline{testing} data.
+
+The additional criteria for evaluating OOD detection methods are then:
+\vspace{-0.5\baselineskip}
+\begin{itemize}
+    \item sensitivity, measured as the fraction of correctly classified \dashuline{testing} samples (ID),
+    \item specificity, defined as the proportion of correctly recognized outliers (OOD),
+\end{itemize}
+\textbf{when}\marginpar[\hspace{2.1em}\LARGE{(!)}]{\hspace{1.1em}\LARGE{(!)}} the OOD detection threshold $t$ is selected at $95\% TPR$ of the \underline{training} data, so~that at least $95\%$ of \underline{training} data must be correctly classified by the model.
+
+The conducted study shows that the popular OOD detectors differ significantly in~terms of the proposed measures (sections \ref{section:distributions-results-properties}, \ref{section:distributions-results-trends} and \ref{section:real-classification}). In particular, the Mahalanobis Distance and k-Nearest Neighbors reach very low sensitivity in the range of parameters (number of training samples $n$, dimension of feature vectors $d$) typical for the deep learning models (chapter \ref{chapter:real-data}). This bears a~profound impact on the way the OOD methods should be calibrated in deployments supporting the real-world applications -~as~suggested in section \ref{section:real-recommendations}.

@@ -1,0 +1,100 @@
+\section{Learned representations of image and text data}
+\label{section:representations}
+
+Outlierness measures described in section \ref{section:measures} quantify the similarity of feature vectors $v$ with respect to the target class $c_K$ represented by the dataset cluster $K$. In~essence, these are mathematical calculations performed on the vectors of real numbers. However, not every real data are useful vectors of real numbers applicable for such calculations.
+
+For real-world applications, e.g., classification of text documents or images, these elements have to be first transformed from their original form to the feature vectors, utilizing so called vectorizers. There are multiple known algorithms for performing such transformation – some that produce simple to understand features as outcomes, e.g., counts of selected important keywords in text documents; and some that utilize sophisticated techniques, such as multi-layered convolutional networks, that produce feature vectors with not so transparent meanings for humans.
+
+Chapter \ref{chapter:real-data} is devoted to studying the performance of different OOD detectors in the feature spaces -~representations of different Deep Learning models for image and text recognition. Here a brief summary of each algorithm is provided with references.
+
+
+\subsection{CLIP}
+\label{section:CLIP}
+
+The CLIP (Contrastive Language-Image Pre-training) offers a technique for processing the image into a feature vector that utilizes the a pre-trained convolutional neural network, which uses a transformer-based architecture.
+
+Originally it is a deep learning model, developed by Alec Radford et al. \cite{Radford-2021} at OpenAI\footnote{\url{https://github.com/openai/CLIP}}, that consists of two separate encoder networks, trained on pairs of images and their descriptions (text). Both images and texts are transformed into feature spaces that are then mapped into a~common space, such that the similar images and their descriptions would be clustered together. In the result, the relationship between text and images is produced. The~constructed model is capable of providing a description of the provided images, as well as identifying the images that matches the provided text.
+
+
+\subsection{CoCa}
+\label{section:CoCa}
+
+The CoCa (Contrastive Captioners) is another method that involves the transformer-based architecture, that can be utilized in generation of feature vectors from images.
+
+Described by Jiahui Yu et al. \cite{Yu-2022} at Google, it aims to further advance the capabilities previously seen in models such as CLIP – by co-training vision and language models together. It relies on a two–stage training process: first, a~vision transformer and a~text transformer are trained independently on pairs of images and captions; then, in the second, contrastive stage, the created transformers are fine-tuned together using a~contrastive loss function that encourages similar representations for matching image-caption pairs. The produced model incorporates generative capabilities that allows to generate image captions with a natural language processing (NLP) techniques.
+
+The CoCa model is available as a part of an open source implementation of CLIP\footnote{\url{https://github.com/mlfoundations/open_clip}}.
+
+
+\subsection{ConvNeXT}
+\label{section:ConvNeXT}
+
+The ConvNeXT is a pure convolutional model that can be used for obtaining feature vectors from images. It promises to be accurate, efficient and scalable while remaining very simple in design (contrary to transformers).
+
+Proposed by Zhuang Liu et al. \cite{Liu-2022} at Facebook AI Research\footnote{\url{https://github.com/facebookresearch/ConvNeXt}}, it utilizes a modernized variant of a standard ResNet architecture, inspired by the design components of hierarchical vision transformers (Swin), without involving any attention-based modules that introduce quadratic complexity to the final model (with respect to the input size). During study the authors identified several key components that lead to increased performance on image recognition tasks, resulting in a family of models that are not only more efficient than standard convolutional approaches, but can even outperform the transformer-based architectures.
+
+
+\subsection{EfficientNet}
+\label{section:EfficientNet}
+
+The EfficientNet represents a family of the state-of-the-art classification models for images that utilize a convolutional neural network architecture and so called compound scaling method. It is also capable of providing feature vectors effectively.
+
+Invented by Mingxing Tan and Quoc V. Le \cite{Tan-2020} at Google Research\footnote{\url{https://github.com/tensorflow/tpu/tree/master/models/official/efficientnet}}, if focuses on constructing a model that would achieve high classification accuracy, while remaining efficient to compute. They key lies in the utilization of a scaling method that uniformly escalate the network dimensions (depth, width and resolution) for provided training data with fixed coefficients – balancing model accuracy and efficiency. This is justified by the intuition that for the larger input images the neural network also needs to be suitably bigger in order to maintain the accurate recognition ability. Additionally, it~employs the squeeze-and-excitation technique to optimize the features representation. In effect, compared to historically previous approaches, it results in models that are smaller and faster to compute.
+
+
+\subsection{MobileNet}
+\label{section:MobileNet}
+
+The MobileNet is a class of convolutional neural networks that prioritizes the reduction of computational cost at a trade off accuracy. Just like other neural networks, it is capable of producing feature vectors from images.
+
+Developed by Andrew Howard et al. \cite{Howard-2017} at Google\footnote{\url{https://github.com/tensorflow/models/tree/master/research/slim/nets/mobilenet}}, it concentrates on building lightweight deep neural networks that would not be constrained by limited computational resources. While not aiming top-class accuracy, it still fall comparable to many popular models known in the literature. The reduced computational cost is achieved by replacing standard convolutional layers in the network architecture with depth-wise separable convolutions that significantly reduce the number of multiplications. This makes it~well suited for applications on low-power computers, such as mobile phones and edge devices.
+
+
+\subsection{ResNet}
+\label{section:ResNet}
+
+The ResNet (Residual Networks) is yet another example of deep convolutional neural networks (CNN) architecture that can be utilized for automated pattern recognition and features extraction from images.
+
+Proposed by Kaiming He et al. \cite{He-2015} at Microsoft Research Asia \footnote{\url{https://github.com/KaimingHe/deep-residual-networks}}, it addresses the problem of vanishing gradient during backpropagation by introducing the concept of so called residual learning that involves shortcut connections, skipping one or more network layers. Such approach allows to construct much deeper models, i.e., containing more layers than were available with previously existing solutions, which effectively leads to more accurate representation of data and enables higher classification performance.
+
+
+\subsection{ViT}
+\label{section:ViT}
+
+The ViT (Vision Transformer) represents a group of methods that use a transformer-based architecture for image classification. Although the approach is significantly different from the one used with convolutional neural networks, it still can be utilized in the process of features extraction from images.
+
+Designed by Alexey Dosovitskiy et al. \cite{Dosovitskiy-2021} at Google Research\footnote{\url{https://github.com/google-research/vision_transformer}}, it processes the input image into a number of patches that are converted into vectors and passed to a~standard transformer encoder. Transformer is able to learn long-range dependencies and relationships between different parts of the image due to so called self-attention function. Before ViTs, such architecture was previously observed and successful in Natural Language Processing (NLP) applications. However, is turns out to be also well-suited for various computer vision tasks.
+
+
+\subsection{BERT}
+\label{section:BERT}
+
+The BERT (Bidirectional Encoder Representations from Transformers) is a transformer model designed for NLP tasks. The same pre–trained model can be fine-tuned and used for a variety of specialized applications without requiring any substantial modifications to the architecture.
+
+Published by Jacob Devlin et al. \cite{Devlin-2019} at Google\footnote{\url{https://github.com/google-research/bert}}, it utilizes a multi-layer transformer encoder architecture. During the pre-training, it involves the Masked Language Modeling (MLM) and the Next Sentence Prediction (NSP). The MLM randomly hides words in the input sequence and attempts the model to predict it back, based on the remaining context. The NSP ensures the sentences are coming in proper consecutive order. This way the model learns the contextual representations of words and phrases from unlabeled text, without a need for any \textit{a priori} language knowledge – just by analyzing the other words that come before and after in the sentences.
+
+
+\subsection{Doc2Vec}
+\label{section:Doc2Vec}
+
+The Doc2Vec (Document to Vector) is an unsupervised algorithm to generate representations (feature vectors) from a collection of text documents, leveraging the word embeddings technique. It features automated identification of the relation between text terms and capturing of the semantic meaning, enabling tasks like document similarity retrieval and classification.
+
+Developed by Quoc V. Le and Tomas Mikolov \cite{Le-2014} at Google, it is built upon the concept of word embeddings learned by Word2Vec \cite{Mikolov-2013}. While Word2Vec focuses on individual words, the Doc2Vec addresses the whole text documents, aiming to represent documents as vectors in a high-dimensional space, where similar documents, regardless of their length, have similar vector representations.
+
+
+\subsection{TF-IDF}
+\label{section:TF-IDF}
+
+The TF-IDF (Term-Frequency/Inverse-Document-Frequency \cite{Lang-1995})\footnote{\scriptsize\url{https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfTransformer}} is a method of producing feature vectors from a collection of text documents – so called text corpus. It~is similar to the Bag-of-Words technique, where the words occurrences are counted.
+
+Just like in the BoW, the features in produced model correspond to the presence of selected words/terms. However, instead of just counting the occurrences, the TF-IDF involves a statistical weighting scheme that measures the significance of each word in a~given corpus. By taking into account both: (1) how often the term appears in a~single document, as well as (2) in how many other documents it occurs; it is capable of identifying features that would provide valuable contribution – reducing terms that appear too frequently in whole corpus, as they would not allow to distinguish specific elements or groups. Terms that are frequent within only a specific document but rare overall in the collection will have higher TF-IDF scores, indicating their relevance as~the~features.
+
+It it worth to notice that, contrary to deep learning techniques, the TF-IDF benefits from the initial pre-processing of the corpora, such as filtering out the stop words and utilizing other Text Mining technologies to transform the words into their base forms –~tokenization, stemming, lemmatization and POS (Part-Of-Speech) tagging \cite{Hotho-2005}\cite{Vijayarani-2015}.
+
+
+\subsection{fastText}
+\label{section:fastText}
+
+The fastText is a library that allows learning and producing the word embeddings (vector representations of words) from a provided text corpora and performing the classification of text documents. It utilizes a non-convolutional, shallow neural network.
+
+Published by group of researchers, Piotr Bojanowski, Edouard Grave, Armand Joulin and Tomas Mikolov \cite{Bojanowski-2017}\cite{Joulin-2016} employed at Facebook AI Research\footnote{\url{https://github.com/facebookresearch/fastText}}, it further extends the techniques of Word2Vec \cite{Mikolov-2013}. Instead of analyzing just whole words, it rather considers the so called character n-grams – partial subwords; each word is represented by a sum of some character n-grams. This allows the model to also handle the out-of-vocabulary (OOV) data – previously unseen words, not encountered during the training, can still be represented as a combination of known character n-grams. Therefore the resulting model is versatile, while it also often remains lightweight enough for applications even on~mobile devices.
